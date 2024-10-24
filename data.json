@@ -1,0 +1,81 @@
+{
+    "users": [
+      {
+        "_id": "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
+        "username": "user1",
+        "profileImage": "",
+        "password": "$2b$12$Ib9Yhfbw9zOJUhu8bl3ynurqNUlVIzJsJyjkGDdsHCW8LhYaDZZaO",
+        "passwordRepeat": "$2b$12$gEHGIftpaQ7FpCBsjj8RX.fRS0V6lb7Qje8kIcrRj0ZXQW5Cab2JK"
+      },
+      {
+        "_id": "00c9ae7b-cf7d-42bf-a712-ee82ee67eb87",
+        "username": "user2",
+        "profileImage": "",
+        "password": "$2b$12$zvObq/9SRYYCmOHuopjQBONoVVH4WF4dQS6lUGndQyTSCreJrGgJe",
+        "passwordRepeat": "$2b$12$MNHYwHcZ8z.xGeepCCh2jeHIq9oK4yXL7TIULZbqvlJLK/u76ZRvu"
+      },
+      {
+        "_id": "417a3b81-b9b9-4bf8-8d68-3a354170fdd1",
+        "username": "user3",
+        "profileImage": "",
+        "password": "$2b$12$h7WNTAbLFEEwtEqXGic0rOhfOsBGnAn2hgEoMIZX9HIu7yPqTBXN6",
+        "passwordRepeat": "$2b$12$gfoWUnJaGEz3fTa3Xu7n2uKzEhg90NFkP8wxUMq4vpqaQ0PHhVA/K"
+      }
+    ],
+    "chatrooms": [
+      {
+        "_id": "31ddee9e-0774-4c08-85cc-ffd799451c51",
+        "chatroomUsers": [
+          "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
+          "00c9ae7b-cf7d-42bf-a712-ee82ee67eb87"
+        ],
+        "hasUnreadMessages": true
+      },
+      {
+        "_id": "520d7ab0-02ee-4030-b12c-0a6ac7a0d23d",
+        "chatroomUsers": [
+          "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
+          "417a3b81-b9b9-4bf8-8d68-3a354170fdd1"
+        ],
+        "hasUnreadMessages": false
+      },
+      {
+        "_id": "d91300e8-edfa-4f0d-8ca3-f1bbbf47edf6",
+        "chatroomUsers": [
+          "00c9ae7b-cf7d-42bf-a712-ee82ee67eb87",
+          "417a3b81-b9b9-4bf8-8d68-3a354170fdd1"
+        ],
+        "hasUnreadMessages": false
+      }
+    ],
+    "messages": [
+      {
+        "_id": "f48fc954-20cb-4f48-bb6c-8393c8cb3538",
+        "chatroomId": "31ddee9e-0774-4c08-85cc-ffd799451c51",
+        "senderId": "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
+        "content": "Hello from user1 to user2",
+        "timestamp": "2024-10-24T05:43:28.029233",
+        "likes": [
+          "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
+          "00c9ae7b-cf7d-42bf-a712-ee82ee67eb87"
+        ]
+      },
+      {
+        "_id": "b7012209-eb49-47f0-b153-28608aea1da1",
+        "chatroomId": "520d7ab0-02ee-4030-b12c-0a6ac7a0d23d",
+        "senderId": "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
+        "content": "Hello from user1 to user3",
+        "timestamp": "2024-10-24T05:43:28.029266",
+        "likes": []
+      },
+      {
+        "_id": "5402c087-c4fa-47e8-9a80-9b122d94f632",
+        "chatroomId": "d91300e8-edfa-4f0d-8ca3-f1bbbf47edf6",
+        "senderId": "00c9ae7b-cf7d-42bf-a712-ee82ee67eb87",
+        "content": "Hello from user2 to user3",
+        "timestamp": "2024-10-24T05:43:28.029275",
+        "likes": []
+      }
+    ]
+  }
+  
