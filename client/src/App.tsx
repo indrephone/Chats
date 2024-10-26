@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import ProtectedRoute from './components/protection/ProtectedRoute';
 import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import Profile from './components/pages/Profile';
@@ -14,23 +15,28 @@ import ChatOutlet from './components/outlets/ChatOutlet';
 
 
 const App = () => {
+   const isAuthenticated = localStorage.getItem('user');
+
    return (
     <Routes>
+      <Route path="/" element={isAuthenticated ? <Navigate to="/profile" /> : <Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path='' element={<BaseOutlet/>} >
+
+
+      <Route path='' element={<ProtectedRoute element={<BaseOutlet/>} />} >
          <Route path="/profile" element={<Profile />} />
          <Route path="/users" element={<AllUsers />} />
          <Route path="/conversations" element={<Conversations />} />
          <Route path="/edit/:id" element={<EditUser />} />
       </Route>
 
-      <Route element={<UserOutlet />}>
+      <Route element={<ProtectedRoute  element={<UserOutlet />}/>}>
          <Route path="/user/:id" element={<UserPage />} />
       </Route>
 
-      <Route element={<ChatOutlet />}>
-         <Route path="/user/:id" element={<ChatPage />} />
+      <Route element={<ProtectedRoute element={<ChatOutlet />}/>}>
+         <Route path="/chat/:conversationId" element={<ChatPage />} />
       </Route>
      
     </Routes>
