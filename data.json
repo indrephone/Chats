@@ -4,22 +4,20 @@
         "_id": "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
         "username": "user1",
         "profileImage": "",
-        "password": "$2b$12$Ib9Yhfbw9zOJUhu8bl3ynurqNUlVIzJsJyjkGDdsHCW8LhYaDZZaO",
-        "passwordRepeat": "$2b$12$gEHGIftpaQ7FpCBsjj8RX.fRS0V6lb7Qje8kIcrRj0ZXQW5Cab2JK"
+        "password": "$2b$12$Ib9Yhfbw9zOJUhu8bl3ynurqNUlVIzJsJyjkGDdsHCW8LhYaDZZaO"
+      
       },
       {
         "_id": "00c9ae7b-cf7d-42bf-a712-ee82ee67eb87",
         "username": "user2",
         "profileImage": "",
-        "password": "$2b$12$zvObq/9SRYYCmOHuopjQBONoVVH4WF4dQS6lUGndQyTSCreJrGgJe",
-        "passwordRepeat": "$2b$12$MNHYwHcZ8z.xGeepCCh2jeHIq9oK4yXL7TIULZbqvlJLK/u76ZRvu"
+        "password": "$2b$12$zvObq/9SRYYCmOHuopjQBONoVVH4WF4dQS6lUGndQyTSCreJrGgJe"
       },
       {
         "_id": "417a3b81-b9b9-4bf8-8d68-3a354170fdd1",
         "username": "user3",
         "profileImage": "",
-        "password": "$2b$12$h7WNTAbLFEEwtEqXGic0rOhfOsBGnAn2hgEoMIZX9HIu7yPqTBXN6",
-        "passwordRepeat": "$2b$12$gfoWUnJaGEz3fTa3Xu7n2uKzEhg90NFkP8wxUMq4vpqaQ0PHhVA/K"
+        "password": "$2b$12$h7WNTAbLFEEwtEqXGic0rOhfOsBGnAn2hgEoMIZX9HIu7yPqTBXN6"
       }
     ],
     "chatrooms": [

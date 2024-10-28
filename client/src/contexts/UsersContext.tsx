@@ -5,8 +5,13 @@ export type UserType ={
     _id: string,
     username: string,
     profileImage: string,
-    password: string,
-    passwordRepeat: string,
+    password: string
+};
+export type UserRegistrationType = {
+  username: string;
+  profileImage: string;
+  password: string;
+  passwordRepeat: string; // Only used for validation during registration
 };
 export type ErrorOrsuccessReturn = {error?: string, success?: string};
 export type UsersContextTypes ={
