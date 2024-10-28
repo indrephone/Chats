@@ -13,9 +13,10 @@ export type UserRegistrationType = {
   password: string;
   passwordRepeat: string; // Only used for validation during registration
 };
-export type ErrorOrsuccessReturn = {error?: string, success?: string};
+export type ErrorOrSuccessReturn = {error?: string, success?: string};
 export type UsersContextTypes ={
-    users: UserType[]
+    users: UserType[],
+    addNewUser: (user: Omit<UserType, "_id">) => Promise<ErrorOrSuccessReturn>;
 };
 type ReducerActionTypeVariations =
 | { type: 'uploadData'; allData: UserType[] }
@@ -40,8 +41,32 @@ const UsersContext = createContext<UsersContextTypes | undefined>(undefined);
 const UsersProvider = ({children}: ChildProp) => {
  
    const [users, dispatch] = useReducer(reducer, []);
-//    const [loggedInUser, setLoggedInUser] = useState<null | UserType>(null);
+   const [loggedInUser, setLoggedInUser] = useState<null | UserType>(null);
+   
 
+   const addNewUser = async (user: UserRegistrationType): Promise<ErrorOrSuccessReturn> => {
+    try {
+     const res = await fetch(`/api/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(user),
+      });
+      // Handle if username or other conflicts occur
+      if (res.status === 409) return await res.json();
+      
+      const data = await res.json();
+      
+      // Update the context state with the new user
+      dispatch({ type: 'add', data });
+      setLoggedInUser(data);
+
+      localStorage.setItem('loggedInUser', JSON.stringify(data)); // issaugojam i local storage
+      return { success: 'Registration successful' };
+    } catch (err) {
+      console.error(err);
+      return { error: 'Server error. Please try again later.' };
+    }
+  };
 
 
 
@@ -63,7 +88,8 @@ const UsersProvider = ({children}: ChildProp) => {
      return (
         <UsersContext.Provider
            value={{
-             users
+             users,
+             addNewUser
             //  logUserIn
            }}
        >
