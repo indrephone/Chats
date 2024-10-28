@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import { MongoClient } from "mongodb";
 import cors from 'cors';
 import bodyParser from "body-parser";
@@ -24,3 +24,15 @@ app.use(cors(corsOptions));
 app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}.`));
 
 // get all users
+app.get('/users', async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const data = await client.db('chat_palace').collection('users').find().toArray();
+    res.send(data);
+  } catch(err) {
+    res.status(500).send({ error: err })
+  } finally {
+    // jei client vis dar gyvas
+    client?.close(); // nutraukia BackEnd'o ryšį su DB
+  }
+});

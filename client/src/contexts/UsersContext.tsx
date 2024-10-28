@@ -41,7 +41,7 @@ const UsersProvider = ({children}: ChildProp) => {
 
 
    useEffect(() => {
-    fetch(`/http://localhost:5173/users`)
+    fetch(`/api/users`)
       .then(res => res.json())
       .then(data => dispatch({
         type: "uploadData",
@@ -61,7 +61,9 @@ const UsersProvider = ({children}: ChildProp) => {
              users
             //  logUserIn
            }}
-        ></UsersContext.Provider>
+       >
+        {children}
+       </UsersContext.Provider>
 )
 }
 
