@@ -15,7 +15,8 @@ export type UserRegistrationType = {
 };
 export type ErrorOrSuccessReturn = {error?: string, success?: string};
 export type UsersContextTypes ={
-    users: UserType[]
+    users: UserType[],
+    addNewUser: (user: Omit<UserType, "_id">) => Promise<ErrorOrSuccessReturn>;
 };
 type ReducerActionTypeVariations =
 | { type: 'uploadData'; allData: UserType[] }

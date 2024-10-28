@@ -9,8 +9,9 @@ import UsersContext, {UsersContextTypes, UserRegistrationType} from '../../conte
 const Register = () => {
   const {addNewUser} = useContext(UsersContext) as UsersContextTypes;
   const [registerMessage, setRegisterMessage] = useState('');
+  const navigate = useNavigate();
 
-  const formik = useFormik({
+  const formik = useFormik<UserRegistrationType>({
     initialValues: {
         username: '',
         profileImage: '',
@@ -35,11 +36,92 @@ const Register = () => {
         passwordRepeat: Yup.string()
           .oneOf([Yup.ref('password')], 'Passwords must match')
           .required('Field must be filled')
-        }),
-        onSubmit: (values) =>
+    }),
+        onSubmit: async (values: UserRegistrationType) => {
+
+          const { username, profileImage, password } = values;
+            
+          const registerResponse = await addNewUser({
+            username,
+            profileImage,
+            password,
+        });
+           if(registerResponse.error){
+             setRegisterMessage(registerResponse.error || '');
+           } else {
+             setRegisterMessage(registerResponse.success || 'Registration successful');
+             setTimeout(() => {
+                navigate('/profile');
+             }, 3000);
+           }
+        }
+
+  });
+
     return ( 
         <section>
-            
+            <h2>Registration</h2>
+            <form onSubmit={formik.handleSubmit}>
+            <div>
+              <label htmlFor="username">User name:</label>
+                <input
+                type="text"
+                name="username" id="username"
+                value={formik.values.username}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                />
+                {
+                formik.touched.username && formik.errors.username &&
+                <p>{formik.errors.username}</p>
+                }
+            </div>  
+            <div>
+                <label htmlFor="profileImage">Profile Image:</label>
+                <input
+                type="url"
+                name="profileImage" id="profileImage"
+                value={formik.values.profileImage}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                />
+                {
+                formik.touched.profileImage && formik.errors.profileImage &&
+                <p>{formik.errors.profileImage}</p>
+                }
+            </div>
+            <div>
+                <label htmlFor="password">Password:</label>
+                <input
+                type="password"
+                name="password" id="password"
+                value={formik.values.password}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                />
+                {
+                formik.touched.password && formik.errors.password &&
+                <p>{formik.errors.password}</p>
+                }
+            </div> 
+            <div>
+                <label htmlFor="passwordRepeat">Password Repeat:</label>
+                <input
+                type="password"
+                name="passwordRepeat" id="passwordRepeat"
+                value={formik.values.passwordRepeat}
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                />
+                {
+                formik.touched.passwordRepeat && formik.errors.passwordRepeat &&
+                <p>{formik.errors.passwordRepeat}</p>
+                }
+                </div> 
+                <input type="submit" value="Register"/>  
+            </form>
+            {registerMessage && <p>{registerMessage}</p>}
+            <p>Allready have an account? Go to: <Link to="/login">Sign In</Link></p>
         </section>
      );
 }
