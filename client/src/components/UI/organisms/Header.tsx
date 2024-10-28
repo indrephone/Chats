@@ -1,9 +1,17 @@
 import styled from 'styled-components';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 
+const StyledHeader = styled.header`
+   height: 100px;
+   padding: 0 20px;
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+`;
+
 const Header = () => {
     return ( 
-        <header>
+        <StyledHeader>
             <nav>
                 <ul>
                    <li><NavLink to="/conversations">
@@ -28,7 +36,7 @@ const Header = () => {
                   >Log Out</button>
             </div>
             
-        </header>
+        </StyledHeader>
      );
 }
  
