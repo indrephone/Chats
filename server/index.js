@@ -58,13 +58,12 @@ const checkUniqueUser = async (req, res, next) => {
 
 //post new user
 app.post('/users',checkUniqueUser, async (req, res) => {
+  // console.log("Request received!"); 
+  // console.log(req.body);
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
-    const { password, passwordRepeat, ...otherUserData } = req.body;
+    const { password, ...otherUserData } = req.body;
 
-    if (password !== passwordRepeat) {
-      return res.status(400).send({ errorMessage: 'Passwords do not match' });
-    }
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     const userToInsert ={
@@ -72,7 +71,7 @@ app.post('/users',checkUniqueUser, async (req, res) => {
       password: hashedPassword,
       _id: generateID()
     };
-    
+
     await client.db('chat_palace').collection('users').insertOne(userToInsert);
     res.send(userToInsert);
   } catch(err) {

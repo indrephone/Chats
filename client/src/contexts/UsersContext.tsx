@@ -46,11 +46,18 @@ const UsersProvider = ({children}: ChildProp) => {
 
    const addNewUser = async (user: UserRegistrationType): Promise<ErrorOrSuccessReturn> => {
     try {
+      // Log the user data before sending to the backend
+    console.log("Sending user data to backend:", user);
+
      const res = await fetch(`/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       });
+
+     // Log the raw response from the backend
+     console.log("Response from backend:", res);
+
       // Handle if username or other conflicts occur
       if (res.status === 409) return await res.json();
       

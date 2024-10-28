@@ -39,6 +39,8 @@ const Register = () => {
     }),
         onSubmit: async (values: UserRegistrationType) => {
 
+            console.log("Form values being submitted:", values);
+
           const { username, profileImage, password } = values;
             
           const registerResponse = await addNewUser({
