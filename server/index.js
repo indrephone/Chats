@@ -32,7 +32,6 @@ app.get('/users', async (req, res) => {
   } catch(err) {
     res.status(500).send({ error: err })
   } finally {
-    // jei client vis dar gyvas
-    client?.close(); // nutraukia BackEnd'o ryšį su DB
+     client?.close();
   }
 });
