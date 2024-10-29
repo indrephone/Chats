@@ -4,7 +4,7 @@ import UsersContext, {UsersContextTypes} from '../../contexts/UsersContext';
 
 
 type Props = {
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 const ProtectedRoute = ({children}: Props) => {
@@ -14,7 +14,7 @@ const ProtectedRoute = ({children}: Props) => {
   if (!loggedInUser) {
     return <Navigate to="/login" />;
   }
-  return children;
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;
