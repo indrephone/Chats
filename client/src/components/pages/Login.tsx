@@ -2,9 +2,71 @@ import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
 import { useContext, useState } from "react";
+import styled from 'styled-components';
 
 import UsersContext, { UsersContextTypes} from "../../contexts/UsersContext";
 
+const LoginContainer = styled.section`
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    gap: 10px;
+  }
+
+  p {
+    margin-top: 15px;
+    text-align: center;
+  }
+`;
+const FormWrapper = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+  gap: 10px; 
+
+  > div{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+`;
+const StyledInput = styled.input`
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+`;
+const SubmitButton = styled.input`
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #7b68ee;
+  color: white;
+  border: 1px solid #000;
+  outline: 1px solid #8e67d2;
+
+  &:focus {
+    outline: 2px solid #4c3ccf; 
+  }
+`;
 
 const Login = () => {
 
@@ -47,14 +109,14 @@ const Login = () => {
             }  
       });
     return ( 
-        <section>
+        <LoginContainer>
             <h2>Login</h2>
-            <form onSubmit={formik.handleSubmit}>
+            <FormWrapper onSubmit={formik.handleSubmit}>
                 <div>
-                    <label htmlFor="username">Username:</label>
-                    <input
+                    <StyledInput
                         type="text"
                         name="username" id="username"
+                        placeholder="Username"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.username}
@@ -65,10 +127,10 @@ const Login = () => {
                     }
                 </div>
                 <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
+                    <StyledInput
                         type="password"
                         name="password" id="password"
+                        placeholder="Password"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.password}
@@ -78,11 +140,11 @@ const Login = () => {
                         && <p>{formik.errors.password}</p>
                     }
                 </div>
-                <input type="submit" value="Login" />
-            </form>
+                <SubmitButton type="submit" value="Sign In" />
+            </FormWrapper>
             { loginMessage && <p>{loginMessage}</p> }
             <p>Do not have account? Go to <Link to="/register">Register</Link></p>
-        </section>
+        </LoginContainer>
      );
 }
  

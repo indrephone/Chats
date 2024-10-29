@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import UsersContext, {UsersContextTypes, UserRegistrationType} from '../../contexts/UsersContext';
 
 const RegisterContainer = styled.section`
-    display: flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -37,18 +37,35 @@ const FormWrapper = styled.form`
   align-items: center;
   width: 300px;
   gap: 10px; 
+
+  > div{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
+  }
 `;
 const StyledInput = styled.input`
   width: 100%;
   padding: 10px;
   font-size: 16px;
   margin-bottom: 10px;
+  box-sizing: border-box;
 `;
 const SubmitButton = styled.input`
   width: 100%;
   padding: 10px;
   font-size: 16px;
   cursor: pointer;
+  background-color: #7b68ee;
+  color: white;
+  border: 1px solid #000;
+  outline: 1px solid #8e67d2;
+
+  &:focus {
+    outline: 2px solid #4c3ccf; 
+  }
 `;
 
 
@@ -108,7 +125,7 @@ const Register = () => {
 
     return ( 
         <RegisterContainer>
-            <h2>Registration</h2>
+            <h2>Register</h2>
             <FormWrapper onSubmit={formik.handleSubmit} >
             <div>
                 <StyledInput
@@ -166,7 +183,7 @@ const Register = () => {
                 <p>{formik.errors.passwordRepeat}</p>
                 }
                 </div> 
-                <SubmitButton  type="submit" value="Register"/>  
+                <SubmitButton  type="submit" value="Sign Up"/>  
             </FormWrapper>
             {registerMessage && <p>{registerMessage}</p>}
             <p>Allready have an account? Go to: <Link to="/login">Sign In</Link></p>
