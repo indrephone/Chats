@@ -20,18 +20,23 @@ export type UsersContextTypes ={
     loggedInUser: UserType | null,
     logUserIn: (userLoginInfo: Pick<UserType, "username" | "password">) => Promise<ErrorOrSuccessReturn>,
     logout: () => void,
+    editSpecificUser: (editedUser: Omit<UserType, "_id">, userId: string) => Promise<ErrorOrSuccessReturn>,
+    returnSpecificUser: (id: string) => UserType | undefined;
 };
 type ReducerActionTypeVariations =
 | { type: 'uploadData'; allData: UserType[] }
-| { type: 'add'; data: UserType };   
-
+| { type: 'add'; data: UserType }   
+| { type: 'editUser'; data: Omit<UserType, '_id'>; id: string };
 
 const reducer = (state: UserType[], action: ReducerActionTypeVariations): UserType[] => {
     switch (action.type) {
         case "uploadData":
             return action.allData;
         case "add":
-            return [...state, action.data];    
+            return [...state, action.data];
+        case "editUser":
+            return state.map(el => 
+            el._id === action.id ? { ...el, ...action.data } : el);       
      default:
         return state;
     }     
@@ -57,11 +62,7 @@ const UsersProvider = ({children}: ChildProp) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       });
-
-     // Log the raw response from the backend
-    //  console.log("Response from backend:", res);
-
-      // Handle if username or other conflicts occur
+       // Handle if username or other conflicts occur
       if (res.status === 409) return await res.json();
       
       const data = await res.json();
@@ -111,6 +112,52 @@ const UsersProvider = ({children}: ChildProp) => {
     localStorage.removeItem('loggedInUser');
   };
 
+  const editSpecificUser = async (editedUser: Omit<UserType, "_id">, userId: string): Promise<ErrorOrSuccessReturn> => {
+    try {
+      // Fetch current user info from localStorage
+      const localStorageInfo = localStorage.getItem('loggedInUser');
+      let currentUser: UserType | null = null;
+  
+      if (localStorageInfo) {
+        currentUser = JSON.parse(localStorageInfo) as UserType;
+      }
+  
+      // Check if the currentUser exists and matches the userId
+      if (!currentUser || currentUser._id !== userId) {
+        return { error: "User not found in localStorage or mismatch with userId." };
+      }
+  
+      // Merge the updated data from editedUser and currentUser
+      const updatedUser = {
+        ...currentUser,  // Keep old data
+        username: editedUser.username || currentUser.username,
+        profileImage: editedUser.profileImage || currentUser.profileImage,
+        password: editedUser.password || currentUser.password,  // Retain old password if not updated
+       };
+  
+      // Send the PATCH request to update user data in the backend
+      const res = await fetch(`/api/edit-user/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updatedUser),  // Send the updated user data
+      });
+  
+      if (!res.ok) return { error: "Failed to update user." };
+  
+      // Update both the state and localStorage with the merged user data
+      setLoggedInUser(updatedUser);
+      localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+  
+      return { success: "User updated successfully." };
+    } catch (err) {
+      console.error("Error updating user:", err);
+      return { error: "Server error. Please try again later." };
+    }
+  };
+
+  // return specific user
+  const returnSpecificUser = (id: string): UserType | undefined => users.find(user => user._id === id);
+
 
 
    useEffect(() => {
@@ -136,7 +183,9 @@ const UsersProvider = ({children}: ChildProp) => {
              loggedInUser,
              addNewUser,
              logUserIn,
-             logout
+             logout,
+             editSpecificUser, 
+             returnSpecificUser
            }}
        >
         {children}

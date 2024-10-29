@@ -107,7 +107,7 @@ const Header = () => {
           />
           </NavLink> 
           
-          <NavLink to={`/edit/${loggedInUser._id}`} className="username-link">
+          <NavLink to={`/edit-user/${loggedInUser._id}`} className="username-link">
             {loggedInUser.username}
           </NavLink>
 
