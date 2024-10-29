@@ -16,6 +16,7 @@ const EditUser: React.FC = () => {
   useEffect(() => {
     if (id) {
       const fetchedUser = returnSpecificUser(id);
+      console.log("Fetched User:", fetchedUser);
       setUser(fetchedUser);
     }
   }, [id, returnSpecificUser]);
@@ -33,17 +34,18 @@ const EditUser: React.FC = () => {
         user && (
             <Formik
               initialValues={{
-                username: user.username || '',
-                profileImage: user.profileImage || '',
+                username: user?.username || '',
+                profileImage: user?.profileImage || '',
                 password: '', // Password remains empty unless changed
                 passwordRepeat: '', // Add passwordRepeat field for confirmation
               }}
               validationSchema={validationSchema}
+              enableReinitialize={true}
               onSubmit={async (values) => {
                 // Filter out the password if it hasn't been changed
                 let filteredValues: Partial<Omit<UserType, '_id'>> = {
-                  username: values.username || user.username,
-                  profileImage: values.profileImage || user.profileImage,
+                  username: values.username || user?.username,
+                  profileImage: values.profileImage || user?.profileImage,
                 };
 
                 if (values.password) {
@@ -51,9 +53,9 @@ const EditUser: React.FC = () => {
                   }
                 
       
-                const result = await editSpecificUser(filteredValues as Omit<UserType, '_id'>, user._id);
+                const result = await editSpecificUser(filteredValues as Omit<UserType, '_id'>, user!._id);
                 if ('success' in result) {
-                  navigate('/userPage');
+                  navigate('/profile');
                 }
               }}
             >
@@ -66,15 +68,15 @@ const EditUser: React.FC = () => {
                   </div>
                   <div>
                     <label htmlFor="profileImage">Profile Image:</label>
-                    <Field name="profileImage" id="profileImage" type="profileImage" />
+                    <Field name="profileImage" id="profileImage" type="text" placeholder="Enter profile image URL" />
                   </div>
                   <div>
-                    <label htmlFor="password">Password:</label>
-                    <Field name="password" id="password" type="password" />
+                    <label htmlFor="password">New Password:</label>
+                    <Field name="password" id="password" type="password" placeholder="Leave blank to keep current password"  />
                   </div>
                   <div>
                     <label htmlFor="passwordRepeat">Password Repeat</label>
-                    <Field name="passwordRepeat" id="passwordRepeat" type="passwordRepeat" />
+                    <Field name="passwordRepeat" id="passwordRepeat" type="password" />
                     {errors.passwordRepeat && touched.passwordRepeat && <div>{errors.passwordRepeat}</div>}
                   </div>
                   <button type="submit" disabled={isSubmitting}>
