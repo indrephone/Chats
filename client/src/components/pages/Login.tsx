@@ -38,7 +38,7 @@ const Login = () => {
                 } else {
                   setLoginMessage(loginResponse.success);
                   setTimeout(() => {
-                    navigate('/');
+                    navigate('/profile');
                   }, 3000);
                 }
               } catch(err) {
