@@ -24,18 +24,30 @@ const App = () => {
       <Route path="/register" element={<Register />} />
 
 
-      <Route path='' element={<ProtectedRoute element={<BaseOutlet/>} />} >
+      <Route 
+         path=''
+         element={
+         <ProtectedRoute >
+              <BaseOutlet/>
+           </ProtectedRoute>}>
          <Route path="/profile" element={<Profile />} />
          <Route path="/users" element={<AllUsers />} />
          <Route path="/conversations" element={<Conversations />} />
          <Route path="/edit/:id" element={<EditUser />} />
       </Route>
 
-      <Route element={<ProtectedRoute  element={<UserOutlet />}/>}>
+      <Route element={
+         <ProtectedRoute>
+             <UserOutlet />
+         </ProtectedRoute> }>
          <Route path="/user/:id" element={<UserPage />} />
       </Route>
 
-      <Route element={<ProtectedRoute element={<ChatOutlet />}/>}>
+      <Route 
+        element={
+          <ProtectedRoute>
+             <ChatOutlet />
+          </ProtectedRoute>}>
          <Route path="/chat/:conversationId" element={<ChatPage />} />
       </Route>
      
