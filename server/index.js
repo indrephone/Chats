@@ -85,24 +85,83 @@ app.post('/users',checkUniqueUser, async (req, res) => {
 app.post('/users/login', async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
-    console.log(req.body);
-    const data = await client.db('chat_palace').collection('users').findOne({ username: req.body.username });
+    const { username, password} = (req.body);
+
+    const user = await client.db('chat_palace').collection('users').findOne({ username });
+
     // console.log(data);
-    if(data === null){ // netinkamas username
+    if(!user){ // netinkamas username
       res.status(401).send({ error: 'User does not exist with such username or password.' });
-    } else { // buvo surastas pagal username
-      const passCheck = bcrypt.compareSync(req.body.password, data.password);
+    } 
+    
+   // buvo surastas pagal username
+      const passCheck = bcrypt.compareSync(password, user.password);
       // console.log(passCheck);
-      if(passCheck === false){ // tinkamas username, bet netinkamas password
-        res.status(401).send({ error: 'User does not exist with such username or password.' });
-      } else { // tinkamas username ir password
-        res.status(200).json(data ); 
-      }
-    }
+      if(!passCheck){ // tinkamas username, bet netinkamas password
+        return res.status(401).send({ error: 'User does not exist with such username or password.' });
+      } 
+      
+      // tinkamas username ir password
+      res.status(200).json(user ); 
+    
+    
   } catch(err) {
     console.error(err);
     res.status(500).send({ error: err });
   } finally {
     client?.close();
+  }
+});
+
+// edit user
+app.patch('/edit-user/:id', async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const { username, profileImage, password } = req.body;
+    const id = req.params.id;
+
+    // Fetch the current user from the database to get the existing password
+    const currentUser = await client
+      .db('chat_palace')
+      .collection('users')
+      .findOne({ _id: id });
+
+    if (!currentUser) {
+      return res.status(404).send({ error: 'User not found' });
+    }
+
+    // Prepare the fields to update (username and email)
+    let updateFields = { username, profileImage };
+
+    // Check if a new password is provided and is not empty
+    if (password && password.trim()) {
+      const hashedPassword = bcrypt.hashSync(password, 10);  // Hash the password
+      updateFields.password = hashedPassword;  // Update hashed password
+    } else {
+      updateFields.password = currentUser.password;  // Keep the current hashed password
+    }
+
+    // Log updateFields for debugging
+    console.log("Updating user with fields:", updateFields);
+
+    // Update the user document in MongoDB
+    const editResponse = await client
+      .db('chat_palace')
+      .collection('users')
+      .updateOne({ _id: id }, { $set: updateFields });
+
+       // Log the MongoDB update response
+    console.log("MongoDB Update Response:", editResponse);
+
+    if (editResponse.modifiedCount === 0) {
+      return res.status(500).send({ error: "Failed to update user." });
+    }
+
+    res.send({ success: "User updated successfully." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Server error. Please try again later." });
+  } finally {
+    client?.close(); // Close the DB connection
   }
 });
