@@ -97,11 +97,11 @@ const UsersProvider = ({children}: ChildProp) => {
         // console.log(data);
         setLoggedInUser(data);
         localStorage.setItem('loggedInUser', JSON.stringify(data));
-        return { success: 'Prisijungimas sėkmingas. Tuoj būsite nukelti į Home puslapį.' }
+        return { success: 'Login success, you will de directed to your profile page.' }
       }
     } catch(err) {
       console.error(err);
-      return { error: 'Bandant prisijungti, įvyko serverio klaida. Prašome bandyti vėliau.' };
+      return { error: 'A server error occurred while trying to connect. Please try again later.' };
     }
   }  
 
