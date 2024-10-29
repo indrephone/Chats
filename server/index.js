@@ -80,3 +80,29 @@ app.post('/users',checkUniqueUser, async (req, res) => {
      client?.close();
   }
 });
+
+//login
+app.post('/users/login', async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    console.log(req.body);
+    const data = await client.db('chat_palace').collection('users').findOne({ username: req.body.username });
+    // console.log(data);
+    if(data === null){ // netinkamas username
+      res.status(401).send({ error: 'User does not exist with such username or password.' });
+    } else { // buvo surastas pagal username
+      const passCheck = bcrypt.compareSync(req.body.password, data.password);
+      // console.log(passCheck);
+      if(passCheck === false){ // tinkamas username, bet netinkamas password
+        res.status(401).send({ error: 'User does not exist with such username or password.' });
+      } else { // tinkamas username ir password
+        res.status(200).json(data ); 
+      }
+    }
+  } catch(err) {
+    console.error(err);
+    res.status(500).send({ error: err });
+  } finally {
+    client?.close();
+  }
+});
