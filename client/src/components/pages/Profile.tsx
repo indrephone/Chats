@@ -1,7 +1,7 @@
 const Profile = () => {
     return ( 
         <section>
-            <h1>Profile</h1>
+            <h1>Profile - Welcome to the Chat Palace!</h1>
         </section>
      );
 }

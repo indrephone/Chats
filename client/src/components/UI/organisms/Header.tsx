@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import UsersContext, { UsersContextTypes } from '../../../contexts/UsersContext';
 
 const StyledHeader = styled.header`
    height: 100px;
@@ -10,34 +12,49 @@ const StyledHeader = styled.header`
 `;
 
 const Header = () => {
-    return ( 
-        <StyledHeader>
-            <nav>
-                <ul>
-                   <li><NavLink to="/conversations">
-                      <img src="/chat_white.svg" alt="chat button" /></NavLink></li>
+  const { loggedInUser, logout } = useContext(UsersContext) as UsersContextTypes;
+  const navigate = useNavigate();
 
+  return ( 
+    <StyledHeader>
+      <nav>
+        <ul>
+          <li>
+            <NavLink to="/conversations">
+              <img src="/chat_white.svg" alt="chat button" />
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/users">
+              <img src="/star_white.svg" alt="users button" />
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
 
-                   <li><NavLink to="/users">
-                     <img src="star_white.svg" alt="users button" /></NavLink></li>
-                </ul>
-            </nav>
+      {loggedInUser ? (
+        <div>
+          <img 
+            src={loggedInUser.profileImage} 
+            alt="user profile image" 
+          />
+          <span>{loggedInUser.username}</span> 
+          <button
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+          >
+            Log Out
+          </button>
+        </div>
+      ) : (
+        <div>
+          <NavLink to="/login">Log In</NavLink>
+        </div>
+      )}
+    </StyledHeader>
+  );
+};
 
-            <div>
-                <img src="https://upload.wikimedia.org/wikipedia/en/b/b2/Pluto_%28Disney%29_transparent.png"
-                alt="user profile picture"
-                 />
-                <span>Username</span> 
-                <button
-                  onClick={() => {
-                    setLoggedInUser('');
-                    navigate('/login');
-                  }}
-                  >Log Out</button>
-            </div>
-            
-        </StyledHeader>
-     );
-}
- 
 export default Header;

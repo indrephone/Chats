@@ -19,6 +19,7 @@ export type UsersContextTypes ={
     addNewUser: (user: Omit<UserType, "_id">) => Promise<ErrorOrSuccessReturn>
     loggedInUser: UserType | null,
     logUserIn: (userLoginInfo: Pick<UserType, "username" | "password">) => Promise<ErrorOrSuccessReturn>,
+    logout: () => void,
 };
 type ReducerActionTypeVariations =
 | { type: 'uploadData'; allData: UserType[] }
@@ -105,6 +106,11 @@ const UsersProvider = ({children}: ChildProp) => {
     }
   }  
 
+  const logout = () => {
+    setLoggedInUser(null);
+    localStorage.removeItem('loggedInUser');
+  };
+
 
 
    useEffect(() => {
@@ -129,7 +135,8 @@ const UsersProvider = ({children}: ChildProp) => {
              users,
              loggedInUser,
              addNewUser,
-             logUserIn
+             logUserIn,
+             logout
            }}
        >
         {children}
