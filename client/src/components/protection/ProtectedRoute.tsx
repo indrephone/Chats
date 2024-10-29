@@ -1,13 +1,20 @@
+import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
+import UsersContext, {UsersContextTypes} from '../../contexts/UsersContext';
 
-interface ProtectedRouteProps {
-  element: React.ReactElement;
+
+type Props = {
+  children: JSX.Element;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element }) => {
-  const isAuthenticated = localStorage.getItem('user'); // Or your auth logic
+const ProtectedRoute = ({children}: Props) => {
 
-  return isAuthenticated ? element : <Navigate to="/login" />;
+  const { loggedInUser} = useContext(UsersContext) as UsersContextTypes;
+
+  if (!loggedInUser) {
+    return <Navigate to="/login" />;
+  }
+  return children;
 };
 
 export default ProtectedRoute;
