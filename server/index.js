@@ -137,7 +137,7 @@ app.patch('/edit-user/:id', async (req, res) => {
       console.log(password)
       const hashedPassword = bcrypt.hashSync(password, 10);  // Hash the password
       updateFields.password = hashedPassword;  // Update hashed password
-    }
+    } 
     // Log updateFields for debugging
     console.log("Updating user with fields:", updateFields);
 

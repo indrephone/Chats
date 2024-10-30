@@ -126,7 +126,7 @@ const UsersProvider = ({children}: ChildProp) => {
     localStorage.removeItem('loggedInUser');
   };
 
-  const editSpecificUser = async (editedUser: Omit<UserType, "_id">, userId: string): Promise<ErrorOrSuccessReturn> => {
+  const editSpecificUser = async (editedUser: Partial<UserType>, userId: string): Promise<ErrorOrSuccessReturn> => {
     try {
       // Fetch current user info from localStorage
       const localStorageInfo = localStorage.getItem('loggedInUser');
@@ -143,8 +143,8 @@ const UsersProvider = ({children}: ChildProp) => {
   
      // Construct the updated user object, excluding unchanged fields
       const updatedUser: Partial<UserType> = {
-        username: editedUser.username || currentUser.username,
-        profileImage: editedUser.profileImage || currentUser.profileImage,
+        username: editedUser.username ?? currentUser.username,
+        profileImage: editedUser.profileImage ?? currentUser.profileImage,
        };
         // Only include the password field if it's non-empty
         if (editedUser.password && editedUser.password.trim() !== "") {
@@ -164,8 +164,8 @@ const UsersProvider = ({children}: ChildProp) => {
       if (!res.ok) return { error: "Failed to update user." };
   
       // Update both the state and localStorage with the merged user data
-      setLoggedInUser(updatedUser as UserType);
-      localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+      setLoggedInUser({...currentUser, ...updatedUser} as UserType);
+      localStorage.setItem('loggedInUser', JSON.stringify({...currentUser, ...updatedUser}));
   
       return { success: "User updated successfully." };
     } catch (err) {
