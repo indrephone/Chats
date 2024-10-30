@@ -42,16 +42,14 @@ const EditUser: React.FC = () => {
               validationSchema={validationSchema}
               enableReinitialize={true}
               onSubmit={async (values) => {
-                // Filter out the password if it hasn't been changed
-                let filteredValues: Partial<Omit<UserType, '_id'>> = {
-                  username: values.username || user?.username,
-                  profileImage: values.profileImage || user?.profileImage,
-                };
-
-                if (values.password) {
-                    filteredValues = { ...filteredValues, password: values.password };
-                  }
-                
+                    // Create a filtered object that only includes non-empty values
+                    const filteredValues = (Object.keys(values) as Array<keyof typeof values>).reduce((acc, key) => {
+                      if (values[key] && values[key].trim() !== "") {
+                          acc[key] = values[key];
+                      }
+                      return acc;
+                  }, {} as Partial<typeof values>);  
+             
       
                 const result = await editSpecificUser(filteredValues as Omit<UserType, '_id'>, user!._id);
                 if ('success' in result) {

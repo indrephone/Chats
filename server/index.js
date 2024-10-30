@@ -75,7 +75,8 @@ app.post('/users',checkUniqueUser, async (req, res) => {
     await client.db('chat_palace').collection('users').insertOne(userToInsert);
     res.send(userToInsert);
   } catch(err) {
-    res.status(500).send({ error: err })
+      console.error(err);
+    res.status(500).send({ error: "Failed to register user due to a server error." })
   } finally {
      client?.close();
   }

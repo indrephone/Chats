@@ -55,29 +55,43 @@ const UsersProvider = ({children}: ChildProp) => {
    const addNewUser = async (user: UserRegistrationType): Promise<ErrorOrSuccessReturn> => {
     try {
       // Log the user data before sending to the backend
-    // console.log("Sending user data to backend:", user);
+    console.log("Sending user data to backend:", user);
 
      const res = await fetch(`/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),
       });
-       // Handle if username or other conflicts occur
-      if (res.status === 409) return await res.json();
-      
-      const data = await res.json();
-      
-      // Update the context state with the new user
-      dispatch({ type: 'add', data });
-      setLoggedInUser(data);
-
-      localStorage.setItem('loggedInUser', JSON.stringify(data)); // issaugojam i local storage
-      return { success: 'Registration successful' };
-    } catch (err) {
-      console.error(err);
-      return { error: 'Server error. Please try again later.' };
+       // Handle specific status codes (e.g., 409 Conflict for duplicate username)
+      if (res.status === 409){
+        const errorData = await res.json();
+        return errorData;
+      } 
+      if (res.ok) {
+        // Parse JSON only if response is OK
+        const data = await res.json();
+        dispatch({ type: 'add', data });
+        setLoggedInUser(data);
+        localStorage.setItem('loggedInUser', JSON.stringify(data)); 
+        return { success: 'Registration successful' };
+    } else {
+        // Try to parse error message from response if not OK
+        try {
+            const errorData = await res.json();
+            return { error: errorData.error || 'Failed to register user.' };
+        } catch (parseError) {
+            console.error("Error parsing JSON response:", parseError);
+            return { error: 'Failed to register user due to a server error.' };
+        }
     }
-  };
+} catch (err) {
+    console.error("Error in addNewUser:", err);
+    return { error: 'Server error. Please try again later.' };
+}
+};
+     
+      
+     
 
   const logUserIn = async (userLoginInfo: Pick<UserType, 'username' | 'password'>): Promise<ErrorOrSuccessReturn> => {
     try {
@@ -127,13 +141,17 @@ const UsersProvider = ({children}: ChildProp) => {
         return { error: "User not found in localStorage or mismatch with userId." };
       }
   
-      // Merge the updated data from editedUser and currentUser
-      const updatedUser = {
-        ...currentUser,  // Keep old data
+     // Construct the updated user object, excluding unchanged fields
+      const updatedUser: Partial<UserType> = {
         username: editedUser.username || currentUser.username,
         profileImage: editedUser.profileImage || currentUser.profileImage,
-        password: editedUser.password || currentUser.password,  // Retain old password if not updated
        };
+        // Only include the password field if it's non-empty
+        if (editedUser.password && editedUser.password.trim() !== "") {
+          updatedUser.password = editedUser.password;
+      } else {
+          updatedUser.password = currentUser.password; // Retain the current hashed password if not updated
+      }
   
       // Send the PATCH request to update user data in the backend
       const res = await fetch(`/api/edit-user/${userId}`, {
@@ -145,7 +163,7 @@ const UsersProvider = ({children}: ChildProp) => {
       if (!res.ok) return { error: "Failed to update user." };
   
       // Update both the state and localStorage with the merged user data
-      setLoggedInUser(updatedUser);
+      setLoggedInUser(updatedUser as UserType);
       localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
   
       return { success: "User updated successfully." };
