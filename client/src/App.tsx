@@ -10,8 +10,6 @@ import UserPage from './components/pages/UserPage';
 import ChatPage from './components/pages/ChatPage';
 // outlets
 import BaseOutlet from './components/outlets/Baseoutlet';
-import UserOutlet from './components/outlets/UserOutlet';
-import ChatOutlet from './components/outlets/ChatOutlet';
 
 
 const App = () => {
@@ -34,20 +32,7 @@ const App = () => {
          <Route path="/users" element={<AllUsers />} />
          <Route path="/conversations" element={<Conversations />} />
          <Route path="/edit-user/:id" element={<EditUser />} />
-      </Route>
-
-      <Route element={
-         <ProtectedRoute>
-             <UserOutlet />
-         </ProtectedRoute> }>
          <Route path="/user/:id" element={<UserPage />} />
-      </Route>
-
-      <Route 
-        element={
-          <ProtectedRoute>
-             <ChatOutlet />
-          </ProtectedRoute>}>
          <Route path="/chat/:conversationId" element={<ChatPage />} />
       </Route>
      
