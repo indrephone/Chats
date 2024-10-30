@@ -11,13 +11,16 @@ const StyledSection = styled.section`
 
 const AllUsers = () => {
 
-    const { users } = useContext(UsersContext) as UsersContextTypes;
+    const { users, loggedInUser } = useContext(UsersContext) as UsersContextTypes;
+
+// Filter out the logged-in user from the users list
+  const filteredUsers = users.filter(user => user._id !== loggedInUser?._id);
 
     return ( 
         <StyledSection>
             <h2>All Users</h2>
             <div>
-                {users.map(user =>
+                {filteredUsers.map(user =>
                     <AllUsersCard
                       key={user._id}
                       data={user}
