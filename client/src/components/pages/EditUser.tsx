@@ -49,6 +49,9 @@ const EditUser: React.FC = () => {
                       }
                       return acc;
                   }, {} as Partial<typeof values>);  
+
+                  console.log("Filtered Values:", filteredValues);
+
              
       
                 const result = await editSpecificUser(filteredValues as Omit<UserType, '_id'>, user!._id);
