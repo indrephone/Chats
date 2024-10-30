@@ -87,10 +87,10 @@ app.post('/users/login', async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
     const { username, password} = (req.body);
-
+    // console.log(req.body);
     const user = await client.db('chat_palace').collection('users').findOne({ username });
 
-    // console.log(data);
+    console.log(user);
     if(!user){ // netinkamas username
       res.status(401).send({ error: 'User does not exist with such username or password.' });
     } 

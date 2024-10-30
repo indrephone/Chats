@@ -95,7 +95,7 @@ const UsersProvider = ({children}: ChildProp) => {
 
   const logUserIn = async (userLoginInfo: Pick<UserType, 'username' | 'password'>): Promise<ErrorOrSuccessReturn> => {
     try {
-      // console.log(userLoginInfo);
+      console.log(userLoginInfo);
       const res = await fetch(`/api/users/login`, {
         method: "POST",
         headers: {
@@ -105,15 +105,17 @@ const UsersProvider = ({children}: ChildProp) => {
       });
       // console.log(res);
       if(res.status === 401){ // neteisingos prisijungimo įvestys
-        const error = await res.json();
+        return await res.json();
         // console.log(error);
-        return error;
-      } else { // teisingos prisijungimo įvestys
+       } else if (res.ok){ // teisingos prisijungimo įvestys
         const data = await res.json();
+      
         // console.log(data);
         setLoggedInUser(data);
         localStorage.setItem('loggedInUser', JSON.stringify(data));
         return { success: 'Login success, you will de directed to your profile page.' }
+      }else {
+        return{ error: "Unexpected server response."};
       }
     } catch(err) {
       console.error(err);
