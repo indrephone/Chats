@@ -148,10 +148,11 @@ const UsersProvider = ({children}: ChildProp) => {
        };
         // Only include the password field if it's non-empty
         if (editedUser.password && editedUser.password.trim() !== "") {
-          updatedUser.password = editedUser.password;
-      } else {
-          updatedUser.password = currentUser.password; // Retain the current hashed password if not updated
-      }
+          updatedUser.password = editedUser.password; // ka vartotojas irase redagavimo metu
+      } 
+      //else {
+       //   updatedUser.password = currentUser.password; // Retain the current hashed password if not updated
+      //}
   
       // Send the PATCH request to update user data in the backend
       const res = await fetch(`/api/edit-user/${userId}`, {

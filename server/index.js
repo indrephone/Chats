@@ -120,6 +120,7 @@ app.patch('/edit-user/:id', async (req, res) => {
   try {
     const { username, profileImage, password } = req.body;
     const id = req.params.id;
+    console.log(req.body)
 
     // Fetch the current user from the database to get the existing password
     const currentUser = await client
@@ -127,21 +128,16 @@ app.patch('/edit-user/:id', async (req, res) => {
       .collection('users')
       .findOne({ _id: id });
 
-    if (!currentUser) {
-      return res.status(404).send({ error: 'User not found' });
-    }
 
     // Prepare the fields to update (username and email)
     let updateFields = { username, profileImage };
 
     // Check if a new password is provided and is not empty
     if (password && password.trim()) {
+      console.log(password)
       const hashedPassword = bcrypt.hashSync(password, 10);  // Hash the password
       updateFields.password = hashedPassword;  // Update hashed password
-    } else {
-      updateFields.password = currentUser.password;  // Keep the current hashed password
     }
-
     // Log updateFields for debugging
     console.log("Updating user with fields:", updateFields);
 
