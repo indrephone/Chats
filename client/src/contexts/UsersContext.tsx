@@ -73,6 +73,14 @@ const UsersProvider = ({children}: ChildProp) => {
         dispatch({ type: 'add', data });
         setLoggedInUser(data);
         localStorage.setItem('loggedInUser', JSON.stringify(data)); 
+
+        // Refetch all users to ensure the new user appears in the list
+        fetch(`/api/users`)
+        .then(res => res.json())
+        .then(data => dispatch({ type: "uploadData", allData: data }))
+        .catch(err => console.error(err));  
+
+
         return { success: 'Registration successful' };
     } else {
         // Try to parse error message from response if not OK
