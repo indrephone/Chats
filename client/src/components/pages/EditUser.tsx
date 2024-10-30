@@ -22,8 +22,18 @@ const EditUser: React.FC = () => {
   }, [id, returnSpecificUser]);
 
   const validationSchema = Yup.object({
-    username: Yup.string().required('Username is required'),
-    password: Yup.string(),
+    username: Yup.string()
+    .min(5, 'username must be at least 5 symbols length')
+    .max(20, 'Username can be up to 20 symbols length')
+    .trim() ,
+    profileImage: Yup.string()
+    .url('Must be valid URL'),
+    password: Yup.string()
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/,
+      'Password must be at least: one lower case, one upper case, one number, one special symbol and length to be between 8 and 25'
+    )
+    .trim(),
     passwordRepeat: Yup.string().oneOf(
       [Yup.ref('password'), ''],
       'Passwords must match'
