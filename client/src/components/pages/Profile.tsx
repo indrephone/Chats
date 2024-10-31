@@ -1,5 +1,17 @@
 import { useContext} from 'react';
 import UsersContext,{ UsersContextTypes } from '../../contexts/UsersContext';
+import styled from 'styled-components';
+
+const ProfileStyle = styled.section`
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  border: 1px solid #ccc;
+
+  img {
+    height: 200px;
+  }
+`;
 
 
 const Profile = () => {
@@ -8,11 +20,11 @@ const Profile = () => {
    if(!loggedInUser) return <p>Loading...</p>;
 
     return ( 
-        <section>
+        <ProfileStyle>
             <h1>Profile - Welcome to the Chat Palace!</h1>
-            <p>{loggedInUser.username}</p>
+            <h3>{loggedInUser.username}</h3>
             <img src={loggedInUser.profileImage} alt={`${loggedInUser.username}'s profile`} />
-        </section>
+        </ProfileStyle>
      );
 }
  
