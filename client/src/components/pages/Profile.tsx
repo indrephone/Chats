@@ -9,7 +9,7 @@ const ProfileStyle = styled.section`
   border: 1px solid #ccc;
 
   img {
-    height: 200px;
+    max-height: 200px;
   }
 `;
 
@@ -23,7 +23,7 @@ const Profile = () => {
         <ProfileStyle>
             <h1>Profile - Welcome to the Chat Palace!</h1>
             <h3>{loggedInUser.username}</h3>
-            <img src={loggedInUser.profileImage} alt={`${loggedInUser.username}'s profile`} />
+            <img src={loggedInUser.profileImage || "/default_profile_image.svg"} alt={`${loggedInUser.username}'s profile`} />
         </ProfileStyle>
      );
 }
