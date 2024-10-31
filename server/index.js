@@ -162,3 +162,23 @@ app.patch('/edit-user/:id', async (req, res) => {
     client?.close(); // Close the DB connection
   }
 });
+
+// Get a specific user by ID
+app.get('/users/:id', async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const { id } = req.params;
+    const user = await client.db('chat_palace').collection('users').findOne({ _id: id });
+
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    res.send(user);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Failed to fetch user data due to a server error." });
+  } finally {
+    client?.close();
+  }
+});

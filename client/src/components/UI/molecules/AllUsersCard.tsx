@@ -5,6 +5,7 @@ import {  UserType } from '../../../contexts/UsersContext';
 
 type Props ={
     data: UserType;
+    userId:string;
 }
 const CardLink = styled(Link)`
   text-decoration: none;
@@ -33,10 +34,10 @@ const CardDiv = styled.div`
   }
 `;
 
-const AllUsersCard = ({data} : Props) => {
+const AllUsersCard = ({data, userId } : Props) => {
     return ( 
 
-        <CardLink to={`/userPage/${data._id}`}> 
+        <CardLink to={`/user/${userId}`} style={{ textDecoration: 'none' }}> 
            <CardDiv>
             <img 
                 src={data.profileImage || "/default_profile_image.svg"}
