@@ -1,7 +1,7 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import cors from 'cors';
-import bodyParser from "body-parser";
+
 import { v4 as generateID } from 'uuid';
 import bcrypt from 'bcrypt';
 import "dotenv/config";
@@ -11,8 +11,7 @@ const app = express();
 const PORT = process.env.SERVER_PORT;
 const DB_CONNECTION = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.${process.env.CLUSTER_ID}.mongodb.net/`;
 
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
+
 const corsOptions = {
   origin: `http://localhost:${process.env.FRONT_PORT}`
 };
@@ -37,7 +36,7 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// checking backend function for user registration
+// checks if a username is unique during registration
 const checkUniqueUser = async (req, res, next) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
@@ -182,3 +181,112 @@ app.get('/users/:id', async (req, res) => {
     client?.close();
   }
 });
+
+// chatroom routes
+// auth middleware
+// Basic authentication middleware using _id in headers
+const authMiddleware = (req, res, next) => {
+  const userId = req.headers['_id'];
+
+  if (!userId) {
+    return res.status(401).send({ error: "Unauthorized: _id not provided" });
+  }
+
+  req._id = userId; // Attach _id to the request object for access in routes
+  next(); // Proceed to the route
+};
+
+
+// get all chatrooms of logged in user
+app.get('/chatrooms', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const data = await client.db('chat_palace').collection('chatrooms').find({
+      $or: [{ user1: req._id }, { user2: req._id }]
+    }).toArray();
+
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({ error: err });
+  } finally {
+    client?.close();
+  }
+});
+
+// get a specific chatroom by ID
+app.get('/chatrooms/:id', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const chatroomId = req.params.id;
+    const chatroom = await client.db('chat_palace').collection('chatrooms').findOne({
+      _id: chatroomId,
+      $or: [{ user1: req._id }, { user2: req._id }]
+    });
+
+    if (!chatroom) {
+      return res.status(404).send({ error: "Chatroom not found or unauthorized access" });
+    }
+
+    res.send(chatroom);
+  } catch (err) {
+    res.status(500).send({ error: err });
+  } finally {
+    client?.close();
+  }
+});
+
+// create a new chatroom
+app.post('/chatrooms', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    // Extract the second user (user2) from the request body
+    const { user2 } = req.body;
+
+    // Create a new chatroom object with the logged-in user as user1
+    const newChatroom = {
+      _id: generateID(), // Generate a unique ID for the new chatroom
+      user1: req._id, // Set the logged-in user as user1
+      user2: user2, // Set the other user as user2 from the request body
+      hasUnreadMessages: false // Initial state of unread messages
+    };
+
+    // Insert the new chatroom into the database
+    await client.db('chat_palace').collection('chatrooms').insertOne(newChatroom);
+
+    // Respond with the created chatroom
+    res.status(201).send(newChatroom);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Failed to create chatroom due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
+
+// delete a chatroom
+app.delete('/chatrooms/:id', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const chatroomId = req.params.id;
+
+    // Find and delete the chatroom only if the logged-in user is either user1 or user2
+    const result = await client.db('chat_palace').collection('chatrooms').deleteOne({
+      _id: chatroomId,
+      $or: [{ user1: req._id }, { user2: req._id }]
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).send({ error: "Chatroom not found or unauthorized access" });
+    }
+
+    res.send({ success: "Chatroom deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Failed to delete chatroom due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
+
+
+
