@@ -235,3 +235,31 @@ app.get('/chatrooms/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// create a new chatroom
+app.post('/chatrooms', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    // Extract the second user (user2) from the request body
+    const { user2 } = req.body;
+
+    // Create a new chatroom object with the logged-in user as user1
+    const newChatroom = {
+      _id: generateID(), // Generate a unique ID for the new chatroom
+      user1: req._id, // Set the logged-in user as user1
+      user2: user2, // Set the other user as user2 from the request body
+      hasUnreadMessages: false // Initial state of unread messages
+    };
+
+    // Insert the new chatroom into the database
+    await client.db('chat_palace').collection('chatrooms').insertOne(newChatroom);
+
+    // Respond with the created chatroom
+    res.status(201).send(newChatroom);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Failed to create chatroom due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
+
