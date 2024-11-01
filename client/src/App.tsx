@@ -30,9 +30,9 @@ const App = () => {
            </ProtectedRoute>}>
          <Route path="/profile" element={<Profile />} />
          <Route path="/users" element={<AllUsers />} />
-         <Route path="/conversations" element={<Conversations />} />
-         <Route path="/edit-user/:id" element={<EditUser />} />
          <Route path="/user/:id" element={<UserPage />} />
+         <Route path="/edit-user/:id" element={<EditUser />} />
+         <Route path="/conversations" element={<Conversations />} />
          <Route path="/chat/:conversationId" element={<ChatPage />} />
       </Route>
      
