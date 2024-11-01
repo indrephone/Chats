@@ -7,7 +7,7 @@ const router = express.Router();
 
 const DB_CONNECTION = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.${process.env.CLUSTER_ID}.mongodb.net/`;
 
-
+// router.get('/test', (req, res) => res.send('Test route working'));
 
 // get all users
 router.get('/users', async (req, res) => {

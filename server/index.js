@@ -8,7 +8,8 @@ import usersRoutes from './routes/users.js';
 const app = express();
 const PORT = process.env.SERVER_PORT;
 const corsOptions = {
-  origin: `http://localhost:${process.env.FRONT_PORT}`,
+  // origin: `http://localhost:${process.env.FRONT_PORT}`,
+  origin: '*',
   optionsSuccessStatus: 200
 };
 

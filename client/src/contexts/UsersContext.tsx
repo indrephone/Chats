@@ -106,21 +106,22 @@ const UsersProvider = ({children}: ChildProp) => {
       console.log(userLoginInfo);
       const res = await fetch(`/api/users/login`, {
         method: "POST",
-        headers: {
-          "Content-Type":"application/json"
-        },
+        headers: {"Content-Type":"application/json"},
         body: JSON.stringify(userLoginInfo)
       });
-      // console.log(res);
+      console.log(res);
       if(res.status === 401){ // neteisingos prisijungimo įvestys
         return await res.json();
         // console.log(error);
+
        } else if (res.ok){ // teisingos prisijungimo įvestys
         const data = await res.json();
       
         // console.log(data);
         setLoggedInUser(data);
         localStorage.setItem('loggedInUser', JSON.stringify(data));
+         // Log the stored user data for inspection
+        console.log("Logged-in user data stored in local storage:", data);
         return { success: 'Login success, you will de directed to your profile page.' }
       }else {
         return{ error: "Unexpected server response."};
