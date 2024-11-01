@@ -263,3 +263,30 @@ app.post('/chatrooms', authMiddleware, async (req, res) => {
   }
 });
 
+// delete a chatroom
+app.delete('/chatrooms/:id', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const chatroomId = req.params.id;
+
+    // Find and delete the chatroom only if the logged-in user is either user1 or user2
+    const result = await client.db('chat_palace').collection('chatrooms').deleteOne({
+      _id: chatroomId,
+      $or: [{ user1: req._id }, { user2: req._id }]
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).send({ error: "Chatroom not found or unauthorized access" });
+    }
+
+    res.send({ success: "Chatroom deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ error: "Failed to delete chatroom due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
+
+
+
