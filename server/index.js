@@ -213,7 +213,7 @@ app.get('/conversations', authMiddleware, async (req, res) => {
   }
 });
 
-// get a specific chatroom by ID
+// get a specific conversation by ID
 app.get('/conversations/:id', authMiddleware, async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
@@ -235,7 +235,7 @@ app.get('/conversations/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// create a new chatroom
+// create a new conversation
 app.post('/conversations', authMiddleware, async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
