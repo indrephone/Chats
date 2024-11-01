@@ -3,7 +3,10 @@ import express from "express";
 import { v4 as generateID } from 'uuid';
 import bcrypt from 'bcrypt';
 
+const router = express.Router();
+
 const DB_CONNECTION = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.${process.env.CLUSTER_ID}.mongodb.net/`;
+
 
 
 // get all users

@@ -15,8 +15,10 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}.`));
 
 // users 
-app.use('/users', usersRoutes);
+app.use('/api/users', usersRoutes);
+
+app.listen(PORT, () => console.log(`Server is running on PORT: ${PORT}.`));
+
 
