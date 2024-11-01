@@ -9,7 +9,7 @@ export type ConversationType = {
     hasUnreadMessages: boolean
 };
 type ConversationWithUser = ConversationType & {
-  userData: UserType[]
+  userData: UserType;
 }
 export type ConversationsContextTypes ={
     conversations: ConversationWithUser[];
