@@ -212,3 +212,26 @@ app.get('/chatrooms', authMiddleware, async (req, res) => {
     client?.close();
   }
 });
+
+// get a specific chatroom by ID
+app.get('/chatrooms/:id', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const chatroomId = req.params.id;
+    const chatroom = await client.db('chat_palace').collection('chatrooms').findOne({
+      _id: chatroomId,
+      $or: [{ user1: req._id }, { user2: req._id }]
+    });
+
+    if (!chatroom) {
+      return res.status(404).send({ error: "Chatroom not found or unauthorized access" });
+    }
+
+    res.send(chatroom);
+  } catch (err) {
+    res.status(500).send({ error: err });
+  } finally {
+    client?.close();
+  }
+});
+
