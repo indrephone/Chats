@@ -182,7 +182,7 @@ app.get('/users/:id', async (req, res) => {
   }
 });
 
-// chatroom routes
+// conversations routes
 // auth middleware
 // Basic authentication middleware using _id in headers
 const authMiddleware = (req, res, next) => {
@@ -197,11 +197,11 @@ const authMiddleware = (req, res, next) => {
 };
 
 
-// get all chatrooms of logged in user
-app.get('/chatrooms', authMiddleware, async (req, res) => {
+// get all conversations of logged in user
+app.get('/conversations', authMiddleware, async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
-    const data = await client.db('chat_palace').collection('chatrooms').find({
+    const data = await client.db('chat_palace').collection('conversations').find({
       $or: [{ user1: req._id }, { user2: req._id }]
     }).toArray();
 
@@ -213,21 +213,21 @@ app.get('/chatrooms', authMiddleware, async (req, res) => {
   }
 });
 
-// get a specific chatroom by ID
-app.get('/chatrooms/:id', authMiddleware, async (req, res) => {
+// get a specific conversation by ID
+app.get('/conversations/:id', authMiddleware, async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
-    const chatroomId = req.params.id;
-    const chatroom = await client.db('chat_palace').collection('chatrooms').findOne({
-      _id: chatroomId,
+    const conversationId = req.params.id;
+    const conversation = await client.db('chat_palace').collection('conversations').findOne({
+      _id: conversationId,
       $or: [{ user1: req._id }, { user2: req._id }]
     });
 
-    if (!chatroom) {
-      return res.status(404).send({ error: "Chatroom not found or unauthorized access" });
+    if (!conversation) {
+      return res.status(404).send({ error: "Conversation not found or unauthorized access" });
     }
 
-    res.send(chatroom);
+    res.send(conversation);
   } catch (err) {
     res.status(500).send({ error: err });
   } finally {
@@ -235,15 +235,15 @@ app.get('/chatrooms/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// create a new chatroom
-app.post('/chatrooms', authMiddleware, async (req, res) => {
+// create a new conversation
+app.post('/conversations', authMiddleware, async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
     // Extract the second user (user2) from the request body
     const { user2 } = req.body;
 
     // Create a new chatroom object with the logged-in user as user1
-    const newChatroom = {
+    const newConversation = {
       _id: generateID(), // Generate a unique ID for the new chatroom
       user1: req._id, // Set the logged-in user as user1
       user2: user2, // Set the other user as user2 from the request body
@@ -251,27 +251,27 @@ app.post('/chatrooms', authMiddleware, async (req, res) => {
     };
 
     // Insert the new chatroom into the database
-    await client.db('chat_palace').collection('chatrooms').insertOne(newChatroom);
+    await client.db('chat_palace').collection('conversations').insertOne(newConversation);
 
     // Respond with the created chatroom
-    res.status(201).send(newChatroom);
+    res.status(201).send(newConversation);
   } catch (err) {
     console.error(err);
-    res.status(500).send({ error: "Failed to create chatroom due to a server error." });
+    res.status(500).send({ error: "Failed to create conversation due to a server error." });
   } finally {
     client?.close();
   }
 });
 
-// delete a chatroom
-app.delete('/chatrooms/:id', authMiddleware, async (req, res) => {
+// delete a conversation
+app.delete('/conversations/:id', authMiddleware, async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
-    const chatroomId = req.params.id;
+    const conversationId = req.params.id;
 
-    // Find and delete the chatroom only if the logged-in user is either user1 or user2
-    const result = await client.db('chat_palace').collection('chatrooms').deleteOne({
-      _id: chatroomId,
+    // Find and delete the  conversation only if the logged-in user is either user1 or user2
+    const result = await client.db('chat_palace').collection('conversations').deleteOne({
+      _id: conversationId,
       $or: [{ user1: req._id }, { user2: req._id }]
     });
 
@@ -279,10 +279,10 @@ app.delete('/chatrooms/:id', authMiddleware, async (req, res) => {
       return res.status(404).send({ error: "Chatroom not found or unauthorized access" });
     }
 
-    res.send({ success: "Chatroom deleted successfully" });
+    res.send({ success: "Conversation deleted successfully" });
   } catch (err) {
     console.error(err);
-    res.status(500).send({ error: "Failed to delete chatroom due to a server error." });
+    res.status(500).send({ error: "Failed to delete conversation due to a server error." });
   } finally {
     client?.close();
   }

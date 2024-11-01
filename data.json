@@ -69,7 +69,7 @@
       }
   ]
     ,
-    "chatrooms": [
+    "conversations": [
       {
         "_id": "31ddee9e-0774-4c08-85cc-ffd799451c51",
         "user1":  "592473e3-25c3-4d12-a775-5e47231b70ed",
