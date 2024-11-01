@@ -1,7 +1,7 @@
 import express from "express";
 import { MongoClient } from "mongodb";
 import cors from 'cors';
-import bodyParser from "body-parser";
+
 import { v4 as generateID } from 'uuid';
 import bcrypt from 'bcrypt';
 import "dotenv/config";
@@ -11,8 +11,7 @@ const app = express();
 const PORT = process.env.SERVER_PORT;
 const DB_CONNECTION = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_CLUSTER}.${process.env.CLUSTER_ID}.mongodb.net/`;
 
-app.use(bodyParser.json({ limit: "10mb" }));
-app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
+
 const corsOptions = {
   origin: `http://localhost:${process.env.FRONT_PORT}`
 };
@@ -37,7 +36,7 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// checking backend function for user registration
+// checks if a username is unique during registration
 const checkUniqueUser = async (req, res, next) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
@@ -178,6 +177,37 @@ app.get('/users/:id', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send({ error: "Failed to fetch user data due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
+
+// chatroom routes
+// auth middleware
+// Basic authentication middleware using _id in headers
+const authMiddleware = (req, res, next) => {
+  const userId = req.headers['_id'];
+
+  if (!userId) {
+    return res.status(401).send({ error: "Unauthorized: _id not provided" });
+  }
+
+  req._id = userId; // Attach _id to the request object for access in routes
+  next(); // Proceed to the route
+};
+
+
+// get all chatrooms of logged in user
+app.get('/chatrooms', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const data = await client.db('chat_palace').collection('chatrooms').find({
+      $or: [{ user1: req._id }, { user2: req._id }]
+    }).toArray();
+
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({ error: err });
   } finally {
     client?.close();
   }
