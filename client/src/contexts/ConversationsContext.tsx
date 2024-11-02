@@ -14,6 +14,7 @@ type ConversationWithUser = ConversationType & {
 export type ConversationsContextTypes ={
     conversations: ConversationWithUser[];
     dispatch: React.Dispatch<ReducerActionTypeVariations>;
+    getConversationCount: () => number; 
 };
 type ReducerActionTypeVariations = 
 | { type: 'setConversations', data: ConversationWithUser[]} 
@@ -73,11 +74,25 @@ console.log("Fetched conversations:", data); // Log fetched conversations
         fetchConversations();
     }, []);
 
+
+// Function to get conversation count for the logged-in user
+const getConversationCount = () => {
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+    const userId = loggedInUser?._id;
+
+    return conversations.filter(conversation => 
+        conversation.user1 === userId || conversation.user2 === userId
+    ).length;
+};
+
+
+
     return (
         <ConversationsContext.Provider 
             value={{
               conversations,
-              dispatch     
+              dispatch,
+              getConversationCount     
             }}
             >
             {children}
