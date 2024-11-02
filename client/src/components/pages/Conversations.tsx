@@ -29,11 +29,15 @@ const Conversations = () => {
         <section>
             <h2>Conversations</h2>
             <div>
-                {filteredConversations.map(conversation =>
+                {filteredConversations.length > 0 ? (
+                   filteredConversations.map(conversation => (
                     <AllConversationsCard
                         key={conversation._id}
                         data={conversation}
                     />
+                   ))
+                ) : (
+                    <p>Choose another user to start a conversation.</p>
                 )}
             </div>
             
