@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import UsersContext, { UsersContextTypes } from '../../../contexts/UsersContext';
+import ConversationsContext, { ConversationsContextTypes } from '../../../contexts/ConversationsContext';
+
 
 const StyledHeader = styled.header`
    height: 100px;
@@ -18,6 +20,7 @@ const StyledHeader = styled.header`
 
     li {
       margin-right: 15px;
+      position: relative; 
 
       &:first-child a {
         img {
@@ -74,12 +77,31 @@ const StyledHeader = styled.header`
       cursor: pointer;
     }
   }
+`;
 
+const IconContainer = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+
+const Badge = styled.span`
+position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  z-index: 1;
 `;
 
 const Header = () => {
   const { loggedInUser, logout } = useContext(UsersContext) as UsersContextTypes;
+  const { getConversationCount } = useContext(ConversationsContext) as ConversationsContextTypes;
   const navigate = useNavigate();
+
+  const conversationCount = getConversationCount();
 
   return ( 
     <StyledHeader>
@@ -87,7 +109,12 @@ const Header = () => {
         <ul>
           <li>
             <NavLink to="/conversations">
-              <img src="/chat_white.svg" alt="chat button" />
+             <IconContainer>
+                <img src="/chat_white.svg" alt="chat button" />
+                  {conversationCount > 0 && (
+                  <Badge>{conversationCount}</Badge>  // Show badge if there are conversations
+                )}
+              </IconContainer>
             </NavLink>
           </li>
           <li>

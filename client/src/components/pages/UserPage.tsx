@@ -1,7 +1,8 @@
-import { useParams } from 'react-router-dom';
-import { useState, useEffect} from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useContext} from 'react';
 import { UserType } from '../../contexts/UsersContext';
 import styled from 'styled-components';
+import ConversationsContext, { ConversationsContextTypes} from '../../contexts/ConversationsContext';
 
 const OtherUserStyle = styled.section`
   display: flex;
@@ -23,7 +24,8 @@ const OtherUserStyle = styled.section`
 const UserPage = () => {
     const [user, setUser] = useState<UserType | null>(null);
     const { id } = useParams();
-
+    const navigate = useNavigate();
+    const { startOrGetConversation } = useContext(ConversationsContext) as ConversationsContextTypes;
     
     useEffect(() => {
         if (id) {
@@ -39,19 +41,27 @@ const UserPage = () => {
         }
     }, [id]);
 
+    const handleStartConversation = async () => {
+        if (id) {
+            const conversationId = await startOrGetConversation(id);
+            if (conversationId) {
+                navigate(`/chat/${conversationId}`);
+            }
+        }
+    };
+
+
     if (!user) {
         return <p>Loading user data...</p>;
     }
 
     return ( 
-
-    
         <OtherUserStyle>
             <h1>User Profile</h1>
                <p>Username: {user.username}</p>
                <img src={user.profileImage || "/default_profile_image.svg"} 
-               
-                 alt={`${user.username}'s profile`} />
+                    alt={`${user.username}'s profile`} />
+                <button onClick={handleStartConversation}>Start Conversation</button> 
         </OtherUserStyle>
      );
 }
