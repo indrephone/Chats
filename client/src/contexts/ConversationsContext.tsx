@@ -14,7 +14,8 @@ type ConversationWithUser = ConversationType & {
 export type ConversationsContextTypes ={
     conversations: ConversationWithUser[];
     dispatch: React.Dispatch<ReducerActionTypeVariations>;
-    getConversationCount: () => number; 
+    getConversationCount: () => number;
+    startOrGetConversation: (otherUserId: string) => Promise<string | null> 
 };
 type ReducerActionTypeVariations = 
 | { type: 'setConversations', data: ConversationWithUser[]} 
@@ -47,6 +48,58 @@ const ConversationsContext = createContext<ConversationsContextTypes | undefined
 
 const ConversationsProvider = ({children}: ChildProp) => {
     const [ conversations, dispatch ] = useReducer(reducer,  []);
+
+
+    const startOrGetConversation = async (otherUserId: string): Promise<string | null> => {
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+        const userId = loggedInUser?._id;
+    
+        if (!userId) {
+            console.error("User ID is missing");
+            return null;
+        }
+    
+        // Check if conversation already exists
+        const existingConversation = conversations.find(
+            conversation => 
+                (conversation.user1 === userId && conversation.user2 === otherUserId) ||
+                (conversation.user1 === otherUserId && conversation.user2 === userId)
+        );
+    
+        if (existingConversation) {
+            return existingConversation._id; // Return the ID of the existing conversation
+        }
+    
+        // If no existing conversation, create a new one
+        try {
+            const response = await fetch(`/api/conversations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    '_id': userId
+                },
+                body: JSON.stringify({ user1: userId, user2: otherUserId }),
+            });
+            const newConversation = await response.json();
+            if (newConversation.error) {
+                console.error("Error creating conversation:", newConversation.error);
+                return null;
+            }
+            dispatch({ type: 'addConversation', newConversation });
+            return newConversation._id;
+        } catch (error) {
+            console.error("Failed to start or get conversation:", error);
+            return null;
+        }
+    };
+    
+
+
+
+
+
+
+
 
     useEffect(() => {
         const fetchConversations = async () => {
@@ -92,7 +145,8 @@ const getConversationCount = () => {
             value={{
               conversations,
               dispatch,
-              getConversationCount     
+              getConversationCount,
+              startOrGetConversation    
             }}
             >
             {children}
