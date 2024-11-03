@@ -94,13 +94,6 @@ const ConversationsProvider = ({children}: ChildProp) => {
     };
     
 
-
-
-
-
-
-
-
     useEffect(() => {
         const fetchConversations = async () => {
             const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
@@ -115,9 +108,14 @@ const ConversationsProvider = ({children}: ChildProp) => {
                     });
                     const data = await response.json();
 
-console.log("Fetched conversations:", data); // Log fetched conversations
+             console.log("Fetched conversations:", data); // Log fetched conversations
 
-                    dispatch({ type: 'setConversations', data });
+                 // Check if data is filtered properly to include both user1 and user2 matches
+                const filteredConversations = data.filter((conversation: ConversationType )=> 
+                conversation.user1 === userId || conversation.user2 === userId
+              );
+
+                    dispatch({ type: 'setConversations', data: filteredConversations });
                 } catch (error) {
                     console.error("Failed to fetch conversations:", error);
                 }
@@ -125,6 +123,7 @@ console.log("Fetched conversations:", data); // Log fetched conversations
         };
 
         fetchConversations();
+        console.log("Conversations state:", conversations); // Log conversations state after fetch
     }, []);
 
 

@@ -288,5 +288,69 @@ app.delete('/conversations/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// messages routes
+// get all messages with user info info which belongs to conversation, which id is passed through params
+
+app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const conversationId = req.params.id;
+
+    // Aggregate messages with sender info
+    const messages = await client.db('chat_palace').collection('messages').aggregate([
+      { $match: { conversationId: conversationId } }, // Match by conversationId
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'senderId',
+          foreignField: '_id',
+          as: 'senderInfo'
+        }
+      },
+      { $unwind: '$senderInfo' }, // Unwind senderInfo to get user details
+      { $sort: { timestamp: 1 } } // Sort messages by timestamp (oldest to newest)
+    ]).toArray();
+
+    res.status(200).send(messages);
+  } catch (err) {
+    console.error("Failed to fetch messages:", err);
+    res.status(500).send({ error: "Failed to fetch messages due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
+
+
+
+
+// POST route to add a new message to a specific conversation
+app.post('/conversations/:id/messages', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const conversationId = req.params.id;
+    const senderId = req._id; // Get the authenticated user ID from middleware
+    const { content } = req.body; // Expecting `content` in the request body
+
+    // Create a new message object
+    const newMessage = {
+      _id: generateID(),
+      conversationId,
+      senderId,
+      content,
+      timestamp: new Date().toISOString(), // Current timestamp
+      likes: [] // Initial empty array for likes
+    };
+
+    // Insert the new message into the database
+    await client.db('chat_palace').collection('messages').insertOne(newMessage);
+
+    res.status(201).send(newMessage); // Respond with the newly created message
+  } catch (err) {
+    console.error("Failed to add message:", err);
+    res.status(500).send({ error: "Failed to add message due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
 
 

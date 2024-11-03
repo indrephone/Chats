@@ -16,7 +16,7 @@ export type UserRegistrationType = {
 export type ErrorOrSuccessReturn = {error?: string, success?: string};
 export type UsersContextTypes ={
     users: UserType[],
-    addNewUser: (user: Omit<UserType, "_id">) => Promise<ErrorOrSuccessReturn>
+    addNewUser: (user: UserRegistrationType ) => Promise<ErrorOrSuccessReturn>
     loggedInUser: UserType | null,
     logUserIn: (userLoginInfo: Pick<UserType, "username" | "password">) => Promise<ErrorOrSuccessReturn>,
     logout: () => void,
@@ -190,20 +190,29 @@ const UsersProvider = ({children}: ChildProp) => {
 
 
    useEffect(() => {
-    fetch(`/api/users`)
-      .then(res => res.json())
-      .then(data => dispatch({
-        type: "uploadData",
-        allData: data
-      }))
-      .catch(err => console.error(err));
-    const localStorageInfo = localStorage.getItem('savedUserInfo');
-    if(localStorageInfo){
+    const fetchUsers = async () => {
+      try {
+       const res = await fetch(`/api/users`);
+       const data = await res.json();
+       dispatch({type: "uploadData", allData: data});
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    
+    const autoLogin = async () => {
+    const localStorageInfo = localStorage.getItem('loggedInUser');
+    if(localStorageInfo) {
       const userInfo = JSON.parse(localStorageInfo) as UserType ;
-      logUserIn({ username: userInfo.username, password: userInfo.password });
+      const result = await logUserIn({ username: userInfo.username, password: userInfo.password });
+      if (result.success) {
       setLoggedInUser(userInfo);
+      }
     }
-  }, []);   
+  };
+  fetchUsers();
+  autoLogin();
+}, []) ;   
 
      return (
         <UsersContext.Provider
