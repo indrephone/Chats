@@ -92,7 +92,7 @@
     "messages": [
       {
         "_id": "f48fc954-20cb-4f48-bb6c-8393c8cb3538",
-        "chatroomId": "31ddee9e-0774-4c08-85cc-ffd799451c51",
+        "conversationId": "31ddee9e-0774-4c08-85cc-ffd799451c51",
         "senderId": "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
         "content": "Hello from user1 to user2",
         "timestamp": "2024-10-24T05:43:28.029233",
@@ -103,7 +103,7 @@
       },
       {
         "_id": "b7012209-eb49-47f0-b153-28608aea1da1",
-        "chatroomId": "520d7ab0-02ee-4030-b12c-0a6ac7a0d23d",
+        "conversationId": "520d7ab0-02ee-4030-b12c-0a6ac7a0d23d",
         "senderId": "74d0b776-5ce5-42a0-8155-61d3d028a8b9",
         "content": "Hello from user1 to user3",
         "timestamp": "2024-10-24T05:43:28.029266",
@@ -111,7 +111,7 @@
       },
       {
         "_id": "5402c087-c4fa-47e8-9a80-9b122d94f632",
-        "chatroomId": "d91300e8-edfa-4f0d-8ca3-f1bbbf47edf6",
+        "conversationId": "d91300e8-edfa-4f0d-8ca3-f1bbbf47edf6",
         "senderId": "00c9ae7b-cf7d-42bf-a712-ee82ee67eb87",
         "content": "Hello from user2 to user3",
         "timestamp": "2024-10-24T05:43:28.029275",
