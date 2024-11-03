@@ -320,20 +320,19 @@ app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
   }
 });
 
-// 
 
-// app.get('/conversations/:id/messages', async (req, res) => {
+// sitas veikia postmane!
+// app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
 //   const client = await MongoClient.connect(DB_CONNECTION);
 //   try {
 //     const conversationId = req.params.id;
-//     console.log("Conversation ID:", conversationId); // Log the conversation ID from params
-
-//     // Fetch messages only without the $lookup operation for debugging
+//     console.log("Fetching messages for conversationId:", conversationId); // Debugging log
+    
 //     const messages = await client.db('chat_palace').collection('messages').find({
 //       conversationId: conversationId
 //     }).toArray();
 
-//     console.log("Messages found:", messages); // Log the fetched messages
+//     console.log("Messages found:", messages); // Debugging log
 //     res.status(200).send(messages);
 //   } catch (err) {
 //     console.error("Failed to fetch messages:", err);
@@ -344,18 +343,3 @@ app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
 // });
 
 
-
-
-
-// app.get('/conversations/:id/messages', async (req, res) => {
-//   const client = await MongoClient.connect(DB_CONNECTION);
-//   const db = client.db('chat_palace');
-//   const conversationId = req.params.id;
-
-//   const messages = await db.collection('messages').find({
-//     conversationId: conversationId
-//   }).toArray();
-
-//   res.send(messages);
-//   client.close();
-// });
