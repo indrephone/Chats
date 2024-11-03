@@ -94,13 +94,6 @@ const ConversationsProvider = ({children}: ChildProp) => {
     };
     
 
-
-
-
-
-
-
-
     useEffect(() => {
         const fetchConversations = async () => {
             const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');

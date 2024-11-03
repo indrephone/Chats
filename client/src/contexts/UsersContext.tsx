@@ -16,7 +16,7 @@ export type UserRegistrationType = {
 export type ErrorOrSuccessReturn = {error?: string, success?: string};
 export type UsersContextTypes ={
     users: UserType[],
-    addNewUser: (user: Omit<UserType, "_id">) => Promise<ErrorOrSuccessReturn>
+    addNewUser: (user: UserRegistrationType ) => Promise<ErrorOrSuccessReturn>
     loggedInUser: UserType | null,
     logUserIn: (userLoginInfo: Pick<UserType, "username" | "password">) => Promise<ErrorOrSuccessReturn>,
     logout: () => void,
