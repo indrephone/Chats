@@ -321,25 +321,36 @@ app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
 });
 
 
-// sitas veikia postmane!
-// app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
-//   const client = await MongoClient.connect(DB_CONNECTION);
-//   try {
-//     const conversationId = req.params.id;
-//     console.log("Fetching messages for conversationId:", conversationId); // Debugging log
-    
-//     const messages = await client.db('chat_palace').collection('messages').find({
-//       conversationId: conversationId
-//     }).toArray();
 
-//     console.log("Messages found:", messages); // Debugging log
-//     res.status(200).send(messages);
-//   } catch (err) {
-//     console.error("Failed to fetch messages:", err);
-//     res.status(500).send({ error: "Failed to fetch messages due to a server error." });
-//   } finally {
-//     client?.close();
-//   }
-// });
+
+// POST route to add a new message to a specific conversation
+app.post('/conversations/:id/messages', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const conversationId = req.params.id;
+    const senderId = req._id; // Get the authenticated user ID from middleware
+    const { content } = req.body; // Expecting `content` in the request body
+
+    // Create a new message object
+    const newMessage = {
+      _id: generateID(),
+      conversationId,
+      senderId,
+      content,
+      timestamp: new Date().toISOString(), // Current timestamp
+      likes: [] // Initial empty array for likes
+    };
+
+    // Insert the new message into the database
+    await client.db('chat_palace').collection('messages').insertOne(newMessage);
+
+    res.status(201).send(newMessage); // Respond with the newly created message
+  } catch (err) {
+    console.error("Failed to add message:", err);
+    res.status(500).send({ error: "Failed to add message due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
 
 
