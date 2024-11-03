@@ -1,6 +1,6 @@
-import { useReducer, useEffect, createContext, ReactElement, useContext} from 'react';
+import { useReducer,  createContext, ReactElement} from 'react';
 import { UserType } from './UsersContext';
-import { ConversationType } from './ConversationsContext';
+
 
 type ChildProp = { children: ReactElement };
 export type MessageType = {

@@ -288,5 +288,74 @@ app.delete('/conversations/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// messages routes
+// get all messages with user info info which belongs to conversation, which id is passed through params
+
+app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
+  const client = await MongoClient.connect(DB_CONNECTION);
+  try {
+    const conversationId = req.params.id;
+
+    // Aggregate messages with sender info
+    const messages = await client.db('chat_palace').collection('messages').aggregate([
+      { $match: { conversationId: conversationId } }, // Match by conversationId
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'senderId',
+          foreignField: '_id',
+          as: 'senderInfo'
+        }
+      },
+      { $unwind: '$senderInfo' }, // Unwind senderInfo to get user details
+      { $sort: { timestamp: 1 } } // Sort messages by timestamp (oldest to newest)
+    ]).toArray();
+
+    res.status(200).send(messages);
+  } catch (err) {
+    console.error("Failed to fetch messages:", err);
+    res.status(500).send({ error: "Failed to fetch messages due to a server error." });
+  } finally {
+    client?.close();
+  }
+});
+
+// 
+
+// app.get('/conversations/:id/messages', async (req, res) => {
+//   const client = await MongoClient.connect(DB_CONNECTION);
+//   try {
+//     const conversationId = req.params.id;
+//     console.log("Conversation ID:", conversationId); // Log the conversation ID from params
+
+//     // Fetch messages only without the $lookup operation for debugging
+//     const messages = await client.db('chat_palace').collection('messages').find({
+//       conversationId: conversationId
+//     }).toArray();
+
+//     console.log("Messages found:", messages); // Log the fetched messages
+//     res.status(200).send(messages);
+//   } catch (err) {
+//     console.error("Failed to fetch messages:", err);
+//     res.status(500).send({ error: "Failed to fetch messages due to a server error." });
+//   } finally {
+//     client?.close();
+//   }
+// });
 
 
+
+
+
+// app.get('/conversations/:id/messages', async (req, res) => {
+//   const client = await MongoClient.connect(DB_CONNECTION);
+//   const db = client.db('chat_palace');
+//   const conversationId = req.params.id;
+
+//   const messages = await db.collection('messages').find({
+//     conversationId: conversationId
+//   }).toArray();
+
+//   res.send(messages);
+//   client.close();
+// });

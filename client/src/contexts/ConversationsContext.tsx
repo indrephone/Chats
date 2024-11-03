@@ -115,7 +115,7 @@ const ConversationsProvider = ({children}: ChildProp) => {
                     });
                     const data = await response.json();
 
-console.log("Fetched conversations:", data); // Log fetched conversations
+             console.log("Fetched conversations:", data); // Log fetched conversations
 
                     dispatch({ type: 'setConversations', data });
                 } catch (error) {
@@ -125,6 +125,7 @@ console.log("Fetched conversations:", data); // Log fetched conversations
         };
 
         fetchConversations();
+        console.log("Conversations state:", conversations); // Log conversations state after fetch
     }, []);
 
 
