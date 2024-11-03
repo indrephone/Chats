@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useState} from "react";
 import MessagesContext, { MessageType, MessagesContextTypes } from '../../contexts/MessagesContext';
 import UsersContext from '../../contexts/UsersContext';
+import ConversationsContext, { ConversationsContextTypes } from '../../contexts/ConversationsContext';
 import MessageList from '../UI/atoms/MessageList';  // Component for displaying list of messages
 import MessageInput from "../UI/atoms/MessageInput"; // Component for message input
 
@@ -14,27 +15,38 @@ const ChatPage = ( { conversationId }: ChatPageProps) => {
     
      const messagesContext = useContext(MessagesContext) as MessagesContextTypes;
      const usersContext = useContext(UsersContext);
+     const conversationsContext = useContext(ConversationsContext) as ConversationsContextTypes;
 
      const [newMessage, setNewMessage] = useState("");
+
+     if (!usersContext || !conversationsContext) {
+          console.error("UsersContext or ConversationsContext  is not provided.");
+          return null; // Handle missing context 
+      }
+  
  
-     // Retrieve messages for this specific conversation
-     const messages = messagesContext?.getMessagesByConversationId(conversationId) || [];
+     const {users, loggedInUser }  = usersContext;
+     const { activeConversationId } = conversationsContext;
+
+     const messages = messagesContext?.getMessagesByConversationId(activeConversationId || "") || [];
      const postMessage = messagesContext?.postMessage;
-     const users = usersContext?.users || [];
  
      // Handler for sending a new message to the backend
      const handleSendMessage = () => {
-          if (postMessage) {
+          console.log("Conversation ID in handleSendMessage:", conversationId);  // Verify conversationId is defined
+          if (postMessage && activeConversationId && loggedInUser) {
               const message: NewMessageType = {
-                  conversationId,
-                  senderId: "loggedInUserId",  // Replace with the actual logged-in user ID
+                  conversationId : activeConversationId,
+                  senderId: loggedInUser._id,  // Replace with the actual logged-in user ID
                   content: newMessage,
                   timestamp: new Date().toISOString(),
                   likes: []
               };
               postMessage(message);  // postMessage sends this to the backend
               setNewMessage("");
-          }
+          } else {
+               console.error("Missing conversationId, postMessage function, or loggedInUser.");
+           }
       };
  
     return ( 

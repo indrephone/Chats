@@ -1,5 +1,5 @@
 import { useReducer, useEffect, createContext, ReactElement, useState } from 'react';
-import { UserType, ErrorOrSuccessReturn} from "../contexts/UsersContext";
+import { UserType} from "../contexts/UsersContext";
 
 type ChildProp = { children: ReactElement };
 export type ConversationType = {
@@ -13,7 +13,9 @@ type ConversationWithUser = ConversationType & {
 }
 export type ConversationsContextTypes ={
     conversations: ConversationWithUser[];
-    dispatch: React.Dispatch<ReducerActionTypeVariations>;
+    activeConversationId: string | null;
+    setActiveConversation: (id: string) => void;
+    dispatch: React.Dispatch<ReducerActionTypeVariations>; 
     getConversationCount: () => number;
     startOrGetConversation: (otherUserId: string) => Promise<string | null> 
 };
@@ -48,6 +50,11 @@ const ConversationsContext = createContext<ConversationsContextTypes | undefined
 
 const ConversationsProvider = ({children}: ChildProp) => {
     const [ conversations, dispatch ] = useReducer(reducer,  []);
+    const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+
+    const setActiveConversation = (id: string) => {
+        setActiveConversationId(id);
+    };
 
 
     const startOrGetConversation = async (otherUserId: string): Promise<string | null> => {
@@ -67,6 +74,7 @@ const ConversationsProvider = ({children}: ChildProp) => {
         );
     
         if (existingConversation) {
+            setActiveConversationId(existingConversation._id);
             return existingConversation._id; // Return the ID of the existing conversation
         }
     
@@ -86,6 +94,7 @@ const ConversationsProvider = ({children}: ChildProp) => {
                 return null;
             }
             dispatch({ type: 'addConversation', newConversation });
+            setActiveConversationId(newConversation._id);
             return newConversation._id;
         } catch (error) {
             console.error("Failed to start or get conversation:", error);
@@ -143,6 +152,8 @@ const getConversationCount = () => {
         <ConversationsContext.Provider 
             value={{
               conversations,
+              activeConversationId,
+              setActiveConversation,
               dispatch,
               getConversationCount,
               startOrGetConversation    

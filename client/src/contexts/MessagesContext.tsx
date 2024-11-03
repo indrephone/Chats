@@ -51,16 +51,31 @@ const MessagesProvider = ( {children } : ChildProp) => {
      // Function to post a new message to the backend and update state
      const postMessage = async (message: NewMessageType) => {
         try {
+            const { conversationId, ...messageData } = message;
+            const loggedInUser = localStorage.getItem('loggedInUser');
 
             // Log the message data before sending
            console.log("Sending message data:", message);
 
-            const response = await fetch("/api/messages", {
+           if (!loggedInUser) {
+            console.error("User not found in local storage.");
+            throw new Error("User not authenticated.");
+           }
+
+           // Parse the loggedInUser and get _id
+          const userId = JSON.parse(loggedInUser)._id;
+            if (!userId) {
+               console.error("User _id not found in local storage.");
+            throw new Error("User not authenticated.");
+        }
+
+            const response = await fetch(`/api/conversations/${conversationId}/messages`, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    '_id': userId 
                 },
-                body: JSON.stringify(message)
+                body: JSON.stringify(messageData)
             });
 
           // Log the response status to check if it's successful
