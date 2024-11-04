@@ -31,19 +31,29 @@ const ChatPage = () => {
     }, [conversationId, conversationsContext, messagesContext]);
 
 
-     if (!usersContext || !conversationsContext) {
+     if (!usersContext || !conversationsContext  || !usersContext.loggedInUser) {
           console.error("UsersContext or ConversationsContext  is not provided.");
           return null; // Handle missing context 
       }
   
  
      const {users, loggedInUser }  = usersContext;
-     const { activeConversationId } = conversationsContext;
+     const { activeConversationId, conversations } = conversationsContext;
      const { postMessage } = messagesContext;
 
     
        const messages = messagesContext?.messages.filter(msg => msg.conversationId === conversationId) || [];
        console.log("Filtered messages for conversationId:", conversationId, messages); // Log filtered messages
+
+       // Find the conversation using activeConversationId
+    const currentConversation = conversations.find(convo => convo._id === activeConversationId);
+
+    // Identify the chat partner
+    const chatPartnerId = currentConversation
+        ? (currentConversation.user1 === loggedInUser._id ? currentConversation.user2 : currentConversation.user1)
+        : null;
+
+    const chatPartner = users.find(user => user._id === chatPartnerId);
     
      // Handler for sending a new message to the backend
      const handleSendMessage = () => {
@@ -65,7 +75,19 @@ const ChatPage = () => {
  
     return ( 
         <section>
-             <h1>Chat Page</h1>
+             <h1>
+                Chat Page with
+                {chatPartner && (
+                     <span style={{ marginLeft: '10px', display: 'inline-flex', alignItems: 'center' }}>
+                         <img 
+                             src={chatPartner.profileImage || "/default_profile_image.svg"} 
+                             alt={chatPartner.username} 
+                             style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '5px' }}
+                         />
+                         {chatPartner.username}
+                     </span>
+                )}
+            </h1>
              <MessageList messages={messages} users={users} />
              <MessageInput
                 value={newMessage}
