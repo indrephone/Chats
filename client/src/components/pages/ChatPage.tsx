@@ -25,14 +25,14 @@ const ChatPage = () => {
         if ( conversationId && conversationsContext) {
             const { setActiveConversation } = conversationsContext;
             setActiveConversation(conversationId); // Set the active conversation in context
-            console.log("Setting active conversation ID:", conversationId); // Log the conversation ID being set as active
+            // console.log("Setting active conversation ID:", conversationId); 
             messagesContext?.getMessagesByConversationId(conversationId); // Fetch messages for this conversation
         }
     }, [conversationId, conversationsContext, messagesContext]);
 
 
      if (!usersContext || !conversationsContext  || !usersContext.loggedInUser) {
-          console.error("UsersContext or ConversationsContext  is not provided.");
+        //   console.error("UsersContext or ConversationsContext  is not provided.");
           return null; // Handle missing context 
       }
   
@@ -43,7 +43,7 @@ const ChatPage = () => {
 
     
        const messages = messagesContext?.messages.filter(msg => msg.conversationId === conversationId) || [];
-       console.log("Filtered messages for conversationId:", conversationId, messages); // Log filtered messages
+    //    console.log("Filtered messages for conversationId:", conversationId, messages); 
 
        // Find the conversation using activeConversationId
     const currentConversation = conversations.find(convo => convo._id === activeConversationId);
@@ -57,7 +57,7 @@ const ChatPage = () => {
     
      // Handler for sending a new message to the backend
      const handleSendMessage = () => {
-          console.log("Conversation ID in handleSendMessage:", conversationId);  // Verify conversationId is defined
+        //   console.log("Conversation ID in handleSendMessage:", conversationId); 
           if (postMessage && activeConversationId && loggedInUser) {
               const message: NewMessageType = {
                   conversationId : activeConversationId,

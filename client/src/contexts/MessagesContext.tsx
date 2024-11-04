@@ -15,7 +15,7 @@ type NewMessageType = Omit<MessageType, '_id'>;
 export type MessagesContextTypes = {
     messages: MessageType[];
     dispatch: React.Dispatch<ReducerActionTypeVariations>;
-    getMessagesByConversationId: (conversationId: string) => MessageType[]; // Function to get messages for a specific conversation
+    getMessagesByConversationId: (conversationId: string) => Promise<void>;
     postMessage: (message: NewMessageType) => void; // Function to post a new message
 };
 type ReducerActionTypeVariations =
@@ -45,7 +45,7 @@ const MessagesProvider = ( {children } : ChildProp) => {
 
     // Function to get messages by conversation ID
     const getMessagesByConversationId = async (conversationId: string) =>{
-        console.log("Fetching messages for conversationId:", conversationId); // Log the conversation ID being fetched
+        // console.log("Fetching messages for conversationId:", conversationId);
 
         try {
             const response = await fetch(`/api/conversations/${conversationId}/messages`, {
@@ -57,7 +57,7 @@ const MessagesProvider = ( {children } : ChildProp) => {
             
             if (response.ok) {
                 const data = await response.json();
-                console.log("Fetched messages:", data); // Log the messages fetched
+                // console.log("Fetched messages:", data); 
                 dispatch({ type: 'setMessages', data }); // Set messages in state
             } else {
                 console.error("Failed to fetch messages:", response.status);
@@ -75,7 +75,7 @@ const MessagesProvider = ( {children } : ChildProp) => {
             const loggedInUser = localStorage.getItem('loggedInUser');
 
             // Log the message data before sending
-           console.log("Sending message data:", message);
+        //    console.log("Sending message data:", message);
 
            if (!loggedInUser) {
             console.error("User not found in local storage.");
@@ -99,7 +99,7 @@ const MessagesProvider = ( {children } : ChildProp) => {
             });
 
           // Log the response status to check if it's successful
-           console.log("Response status:", response.status);
+        //    console.log("Response status:", response.status);
 
 
             if (!response.ok) {
