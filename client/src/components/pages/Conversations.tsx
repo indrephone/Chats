@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import ConversationsContext, { ConversationsContextTypes } from '../../contexts/ConversationsContext';
@@ -7,8 +8,9 @@ import AllConversationsCard from '../UI/molecules/AllConversationsCard';
 
 
 const Conversations = () => {
-   const { conversations } = useContext(ConversationsContext) as ConversationsContextTypes;
+   const { conversations,  setActiveConversation  } = useContext(ConversationsContext) as ConversationsContextTypes;
    const { users } = useContext(UsersContext) as UsersContextTypes;
+   const navigate = useNavigate();
 
    // Retrieve the logged-in user’s ID from localStorage
    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
@@ -24,6 +26,11 @@ const Conversations = () => {
       return { ...conversation, userData: otherUser }; // `userData` as a single UserType
   });
 
+  const chooseConversationIfExists = (conversationId: string) => {
+       setActiveConversation(conversationId);
+       navigate(`/chat/${conversationId}`);
+  }
+
 
     return ( 
         <section>
@@ -34,6 +41,7 @@ const Conversations = () => {
                     <AllConversationsCard
                         key={conversation._id}
                         data={conversation}
+                        onClick={() => chooseConversationIfExists(conversation._id)}
                     />
                    ))
                 ) : (
