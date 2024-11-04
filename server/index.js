@@ -263,30 +263,6 @@ app.post('/conversations', authMiddleware, async (req, res) => {
   }
 });
 
-// delete a conversation
-app.delete('/conversations/:id', authMiddleware, async (req, res) => {
-  const client = await MongoClient.connect(DB_CONNECTION);
-  try {
-    const conversationId = req.params.id;
-
-    // Find and delete the  conversation only if the logged-in user is either user1 or user2
-    const result = await client.db('chat_palace').collection('conversations').deleteOne({
-      _id: conversationId,
-      $or: [{ user1: req._id }, { user2: req._id }]
-    });
-
-    if (result.deletedCount === 0) {
-      return res.status(404).send({ error: "Chatroom not found or unauthorized access" });
-    }
-
-    res.send({ success: "Conversation deleted successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ error: "Failed to delete conversation due to a server error." });
-  } finally {
-    client?.close();
-  }
-});
 
 // messages routes
 // get all messages with user info info which belongs to conversation, which id is passed through params
@@ -372,5 +348,70 @@ app.post('/conversations/:id/messages', authMiddleware, async (req, res) => {
     client?.close();
   }
 });
+
+
+
+app.delete('/conversations/:id', authMiddleware, async (req, res) => {
+  console.log("DELETE /conversations/:id route hit");
+
+  const client = new MongoClient(DB_CONNECTION);
+  try {
+    const conversationId = req.params.id;
+    const userId = req._id;
+
+    console.log("Attempting to delete conversation with ID:", conversationId, "by user:", userId);
+
+    await client.connect();
+    const db = client.db('chat_palace');
+
+    // Step 1: Check if user is a participant in the conversation
+    const conversation = await db.collection('conversations').findOne({
+      _id: conversationId,
+      $or: [{ user1: userId }, { user2: userId }]
+    });
+
+    console.log("Conversation found:", conversation);
+     
+    if (!conversation) {
+      console.log("User is not a participant in the conversation or conversation not found.");
+      return res.status(403).json({ message: "Forbidden: You are not a participant in this conversation" });
+    }
+
+    // Step 2: Delete the conversation document
+    const deleteConversationResult = await db.collection('conversations').deleteOne({ _id: conversationId });
+    console.log("Conversation delete result:", deleteConversationResult);
+
+
+    if (deleteConversationResult.deletedCount === 1) {
+      // Step 3: Directly delete all messages with the conversationId
+      console.log("Deleting messages with conversationId:", conversationId);
+
+      const deleteMessagesResult = await db.collection('messages').deleteMany({ conversationId: conversationId });
+      console.log("Messages delete result:", deleteMessagesResult);
+
+      // Step 4: Send success response with counts of deleted items
+      res.status(200).json({
+        message: "Conversation and associated messages deleted successfully",
+        deletedConversationCount: deleteConversationResult.deletedCount,
+        deletedMessagesCount: deleteMessagesResult.deletedCount
+      });
+    } else {
+      console.log("Conversation not found or already deleted.");
+      res.status(404).json({ message: "Conversation not found or already deleted" });
+    }
+  } catch (err) {
+    console.error("Error deleting conversation and messages:", err);
+    res.status(500).json({ error: "Internal server error" });
+  } finally {
+    await client.close();
+  }
+});
+
+
+
+
+
+
+
 
 
