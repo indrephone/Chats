@@ -295,6 +295,7 @@ app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
     const conversationId = req.params.id;
+    const userId = req._id;
 
     // Aggregate messages with sender info
     const messages = await client.db('chat_palace').collection('messages').aggregate([
@@ -310,6 +311,12 @@ app.get('/conversations/:id/messages', authMiddleware, async (req, res) => {
       { $unwind: '$senderInfo' }, // Unwind senderInfo to get user details
       { $sort: { timestamp: 1 } } // Sort messages by timestamp (oldest to newest)
     ]).toArray();
+
+     // Mark the conversation as read by user2
+     await client.db('chat_palace').collection('conversations').updateOne(
+      { _id: conversationId, user2: userId }, // Ensure user2 is the logged-in user
+      { $set: { hasUnreadMessages: false } }
+    );
 
     res.status(200).send(messages);
   } catch (err) {
@@ -331,6 +338,10 @@ app.post('/conversations/:id/messages', authMiddleware, async (req, res) => {
     const senderId = req._id; // Get the authenticated user ID from middleware
     const { content } = req.body; // Expecting `content` in the request body
 
+     // Debugging logs
+     console.log("Conversation ID:", conversationId);
+     console.log("Sender ID:", senderId);
+
     // Create a new message object
     const newMessage = {
       _id: generateID(),
@@ -343,6 +354,15 @@ app.post('/conversations/:id/messages', authMiddleware, async (req, res) => {
 
     // Insert the new message into the database
     await client.db('chat_palace').collection('messages').insertOne(newMessage);
+
+     // Set `hasUnreadMessages` to true for the conversation if sender is `user1`
+     const updateResult = await client.db('chat_palace').collection('conversations').updateOne(
+      { _id: conversationId, user2: { $ne: senderId } }, // Ensure user2 is the recipient
+      { $set: { hasUnreadMessages: true } }
+    );
+
+      // Debugging log to check the result of the update operation
+      console.log("Update Result:", updateResult);
 
     res.status(201).send(newMessage); // Respond with the newly created message
   } catch (err) {

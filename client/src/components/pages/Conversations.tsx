@@ -6,9 +6,21 @@ import ConversationsContext, { ConversationsContextTypes } from '../../contexts/
 import UsersContext, { UsersContextTypes } from '../../contexts/UsersContext';
 import AllConversationsCard from '../UI/molecules/AllConversationsCard';
 
+const StyledSection = styled.section`
+  padding: 10px 30px;
+`;
+
+const UnreadIndicator = styled.span`
+  color: red;
+  font-weight: bold;
+  margin-left: 8px;
+`;
+
 
 const Conversations = () => {
    const { conversations,  setActiveConversation  } = useContext(ConversationsContext) as ConversationsContextTypes;
+   console.log("Conversations from context:", conversations);
+
    const { users } = useContext(UsersContext) as UsersContextTypes;
    const navigate = useNavigate();
 
@@ -33,23 +45,25 @@ const Conversations = () => {
 
 
     return ( 
-        <section>
+        <StyledSection>
             <h2>Conversations</h2>
             <div>
                 {filteredConversations.length > 0 ? (
                    filteredConversations.map(conversation => (
-                    <AllConversationsCard
-                        key={conversation._id}
-                        data={conversation}
-                        onClick={() => chooseConversationIfExists(conversation._id)}
-                    />
+                      <div key={conversation._id} style={{ display: 'flex', alignItems: 'center' }}>
+                        <AllConversationsCard
+                           data={conversation}
+                           onClick={() => chooseConversationIfExists(conversation._id)}
+                        />
+                    {conversation.hasUnreadMessages && <UnreadIndicator>New</UnreadIndicator>}
+                   </div>
                    ))
                 ) : (
                     <p>Choose another user to start a conversation.</p>
                 )}
             </div>
             
-        </section>
+        </StyledSection>
      );
 }
  

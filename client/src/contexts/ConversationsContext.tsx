@@ -18,6 +18,8 @@ export type ConversationsContextTypes ={
     dispatch: React.Dispatch<ReducerActionTypeVariations>; 
     getConversationCount: () => number;
     startOrGetConversation: (otherUserId: string) => Promise<string | null> 
+    addMessage: (conversationId: string, messageContent: string) => Promise<void>;
+    fetchConversations: () => void;
 };
 type ReducerActionTypeVariations = 
 | { type: 'setConversations', data: ConversationWithUser[]} 
@@ -103,37 +105,58 @@ const ConversationsProvider = ({children}: ChildProp) => {
     };
     
 
-    useEffect(() => {
-        const fetchConversations = async () => {
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
-            const userId = loggedInUser?._id;
+    // Function to fetch conversations
+    const fetchConversations = async () => {
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+        const userId = loggedInUser?._id;
 
- console.log("Logged-in user ID:", userId); // Log the user ID
+        console.log("Logged-in user ID:", userId);
 
-            if (userId) {
-                try {
-                    const response = await fetch(`/api/conversations`, {
-                        headers: { '_id': userId }
-                    });
-                    const data = await response.json();
+        if (userId) {
+            try {
+                const response = await fetch(`/api/conversations`, {
+                    headers: { '_id': userId }
+                });
+                const data = await response.json();
 
-             console.log("Fetched conversations:", data); // Log fetched conversations
+                console.log("Fetched conversations:", data);
 
-                 // Check if data is filtered properly to include both user1 and user2 matches
-                const filteredConversations = data.filter((conversation: ConversationType )=> 
-                conversation.user1 === userId || conversation.user2 === userId
-              );
+                const filteredConversations = data.filter((conversation: ConversationType) => 
+                    conversation.user1 === userId || conversation.user2 === userId
+                );
 
-                    dispatch({ type: 'setConversations', data: filteredConversations });
-                } catch (error) {
-                    console.error("Failed to fetch conversations:", error);
-                }
+                dispatch({ type: 'setConversations', data: filteredConversations });
+            } catch (error) {
+                console.error("Failed to fetch conversations:", error);
             }
-        };
+        }
+    };
 
+
+
+     // Function to add a message and re-fetch conversations
+     const addMessage = async (conversationId: string, messageContent: string) => {
+        try {
+            const response = await fetch(`/api/conversations/${conversationId}/messages`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: messageContent })
+            });
+            if (response.ok) {
+                fetchConversations(); // Re-fetch conversations to update `hasUnreadMessages`
+            } else {
+                console.error("Failed to post message");
+            }
+        } catch (error) {
+            console.error("Failed to add message:", error);
+        }
+    };
+
+
+    useEffect(() => {
         fetchConversations();
-        console.log("Conversations state:", conversations); // Log conversations state after fetch
-    }, []);
+        console.log("Conversations state:", conversations);
+    }, []);   
 
 
 // Function to get conversation count for the logged-in user
@@ -156,7 +179,9 @@ const getConversationCount = () => {
               setActiveConversation,
               dispatch,
               getConversationCount,
-              startOrGetConversation    
+              startOrGetConversation,
+              addMessage,
+              fetchConversations // Expose fetchConversations for reuse    
             }}
             >
             {children}
