@@ -1,4 +1,5 @@
-import { useContext, useState} from "react";
+import { useContext, useState, useEffect} from "react";
+import { useParams } from "react-router-dom";
 import MessagesContext, { MessageType, MessagesContextTypes } from '../../contexts/MessagesContext';
 import UsersContext from '../../contexts/UsersContext';
 import ConversationsContext, { ConversationsContextTypes } from '../../contexts/ConversationsContext';
@@ -11,13 +12,24 @@ type ChatPageProps = {
 // Define a type for creating a new message without `_id`
 type NewMessageType = Omit<MessageType, '_id'>;
 
-const ChatPage = ( { conversationId }: ChatPageProps) => {
-    
+const ChatPage = () => {
+    const { conversationId } = useParams<{ conversationId: string }>(); // Get conversationId from URL parameters
      const messagesContext = useContext(MessagesContext) as MessagesContextTypes;
      const usersContext = useContext(UsersContext);
      const conversationsContext = useContext(ConversationsContext) as ConversationsContextTypes;
 
      const [newMessage, setNewMessage] = useState("");
+
+       // Fetch messages for the current conversation on component load or conversation change
+       useEffect(() => {
+        if ( conversationId && conversationsContext) {
+            const { setActiveConversation } = conversationsContext;
+            setActiveConversation(conversationId); // Set the active conversation in context
+            console.log("Setting active conversation ID:", conversationId); // Log the conversation ID being set as active
+            messagesContext?.getMessagesByConversationId(conversationId); // Fetch messages for this conversation
+        }
+    }, [conversationId, conversationsContext, messagesContext]);
+
 
      if (!usersContext || !conversationsContext) {
           console.error("UsersContext or ConversationsContext  is not provided.");
@@ -27,10 +39,12 @@ const ChatPage = ( { conversationId }: ChatPageProps) => {
  
      const {users, loggedInUser }  = usersContext;
      const { activeConversationId } = conversationsContext;
+     const { postMessage } = messagesContext;
 
-     const messages = messagesContext?.getMessagesByConversationId(activeConversationId || "") || [];
-     const postMessage = messagesContext?.postMessage;
- 
+    
+       const messages = messagesContext?.messages.filter(msg => msg.conversationId === conversationId) || [];
+       console.log("Filtered messages for conversationId:", conversationId, messages); // Log filtered messages
+    
      // Handler for sending a new message to the backend
      const handleSendMessage = () => {
           console.log("Conversation ID in handleSendMessage:", conversationId);  // Verify conversationId is defined
