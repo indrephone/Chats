@@ -44,9 +44,29 @@ const MessagesProvider = ( {children } : ChildProp) => {
     const [messages, dispatch] = useReducer(reducer, []);
 
     // Function to get messages by conversation ID
-    const getMessagesByConversationId = (conversationId: string): MessageType[] => {
-        return messages.filter(message => message.conversationId === conversationId);
+    const getMessagesByConversationId = async (conversationId: string) =>{
+        console.log("Fetching messages for conversationId:", conversationId); // Log the conversation ID being fetched
+
+        try {
+            const response = await fetch(`/api/conversations/${conversationId}/messages`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    '_id': JSON.parse(localStorage.getItem('loggedInUser') || '{}')._id
+                }
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Fetched messages:", data); // Log the messages fetched
+                dispatch({ type: 'setMessages', data }); // Set messages in state
+            } else {
+                console.error("Failed to fetch messages:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching messages:", error);
+        }
     };
+   
 
      // Function to post a new message to the backend and update state
      const postMessage = async (message: NewMessageType) => {
