@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import ConversationsContext, { ConversationsContextTypes } from '../../contexts/ConversationsContext';
 import UsersContext, { UsersContextTypes } from '../../contexts/UsersContext';
 import AllConversationsCard from '../UI/molecules/AllConversationsCard';
+import DeleteConversationButton from '../UI/organisms/DeleteConversationsButton';
 
 const StyledSection = styled.section`
   padding: 10px 30px;
@@ -56,6 +57,7 @@ const Conversations = () => {
                            onClick={() => chooseConversationIfExists(conversation._id)}
                         />
                     {conversation.hasUnreadMessages && <UnreadIndicator>New</UnreadIndicator>}
+                    <DeleteConversationButton conversationId={conversation._id} />
                    </div>
                    ))
                 ) : (

@@ -20,6 +20,7 @@ export type ConversationsContextTypes ={
     startOrGetConversation: (otherUserId: string) => Promise<string | null> 
     addMessage: (conversationId: string, messageContent: string) => Promise<void>;
     fetchConversations: () => void;
+    deleteConversation: (conversationId: string) => Promise<void>
 };
 type ReducerActionTypeVariations = 
 | { type: 'setConversations', data: ConversationWithUser[]} 
@@ -153,6 +154,26 @@ const ConversationsProvider = ({children}: ChildProp) => {
     };
 
 
+    const deleteConversation = async (conversationId: string) => {
+        try {
+          const response = await fetch(`/api/conversations/${conversationId}`, {
+            method: 'DELETE',
+            headers: {
+              '_id': JSON.parse(localStorage.getItem('loggedInUser') || '{}')._id
+            }
+          });
+          if (response.ok) {
+            dispatch({ type: 'deleteConversation', id: conversationId });
+          } else {
+            console.error("Failed to delete conversation");
+          }
+        } catch (error) {
+          console.error("Error deleting conversation:", error);
+        }
+      };
+      
+
+
     useEffect(() => {
         fetchConversations();
         console.log("Conversations state:", conversations);
@@ -181,7 +202,8 @@ const getConversationCount = () => {
               getConversationCount,
               startOrGetConversation,
               addMessage,
-              fetchConversations // Expose fetchConversations for reuse    
+              fetchConversations, // Expose fetchConversations for reuse 
+              deleteConversation   
             }}
             >
             {children}
