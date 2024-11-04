@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
-import ConversationsContext, { ConversationsContextTypes } from '../../contexts/ConversationsContext';
+import ConversationsContext, { ConversationsContextTypes } from '../../../contexts/ConversationsContext'
 
 const DeleteButtonContainer = styled.div`
   cursor: pointer;
