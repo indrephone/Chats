@@ -1,6 +1,49 @@
 import { MessageType } from '../../../contexts/MessagesContext';
 import { UserType } from '../../../contexts/UsersContext';
 import LikeButton from './LikeButton';
+import styled from 'styled-components';
+
+const MessageCardContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 8px 0;
+`;
+
+const ProfileImage = styled.img`
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 8px;
+`;
+
+const MessageHeader = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+`;
+
+const Username = styled.span`
+    font-weight: bold;
+    margin-right: 8px;
+`;
+
+const Timestamp = styled.span`
+    font-size: 0.8rem;
+    color: #666;
+`;
+
+const MessageContent = styled.p`
+    font-size: 1rem;
+    margin: 4px 0;
+`;
+
+const LikeSection = styled.div`
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+`;
 
 type MessageCardProps = {
     message: MessageType;
@@ -15,19 +58,22 @@ const MessageCard = ({ message, users, loggedInUserId }: MessageCardProps) => {
     const likeCount = message.likes ? message.likes.length : 0;
 
     return (
-        <div className="message-card">
-            <img src={sender?.profileImage} alt={`${sender?.username}'s profile`} />
-            <div>
-                <span>{sender?.username}</span>
-                <p>{message.content}</p>
-                <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
-                <div>
+        <MessageCardContainer>
+            <MessageHeader>
+                <ProfileImage src={sender?.profileImage} alt={`${sender?.username}'s profile`} />
+                <Username>{sender?.username}</Username>
+                <Timestamp>{new Date(message.timestamp).toLocaleTimeString()}</Timestamp>
+            </MessageHeader>
+          
+            <MessageContent>{message.content}</MessageContent>
+
+            <LikeSection>
                 {!isOwnMessage &&  <LikeButton messageId={message._id} isLiked={isLiked} />}
                 {likeCount > 0 && <span>{likeCount} {likeCount === 1 ? "Like" : "Likes"}</span>}
-                </div>
-            </div>
-        </div>
+            </LikeSection>
+        </MessageCardContainer>
     );
 };
 
 export default MessageCard;
+               
