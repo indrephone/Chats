@@ -17,6 +17,7 @@ export type MessagesContextTypes = {
     dispatch: React.Dispatch<ReducerActionTypeVariations>;
     getMessagesByConversationId: (conversationId: string) => Promise<void>;
     postMessage: (message: NewMessageType) => void; // Function to post a new message
+    toggleLikeMessage: (messageId: string) => Promise<void>
 };
 type ReducerActionTypeVariations =
 { type: 'setMessages', data: MessageType[] } |
@@ -117,6 +118,41 @@ const MessagesProvider = ( {children } : ChildProp) => {
 
 
 
+    //like messages
+    const toggleLikeMessage = async (messageId: string) => {
+        const loggedInUserId = JSON.parse(localStorage.getItem('loggedInUser') || '{}')._id;
+        console.log("toggleLikeMessage called with messageId:", messageId);
+        console.log("Logged-in user ID:", loggedInUserId);
+        try {
+            const response = await fetch(`/api/messages/${messageId}/like`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    '_id': loggedInUserId
+                }
+            });
+    
+            console.log("Response status:", response.status);
+
+            if (!response.ok) {
+                throw new Error(`Failed to toggle like with status ${response.status}`);
+            }
+    
+            // Check if there is a response body before parsing
+            const updatedMessage = response.headers.get("Content-Length") === "0" ? {} : await response.json();
+            console.log("Updated message from server:", updatedMessage);
+    
+            dispatch({ type: 'setMessages', data: messages.map(msg =>
+                msg._id === updatedMessage._id ? updatedMessage : msg
+            ) });
+        } catch (error) {
+            console.error("Error toggling like:", error);
+        }
+    };
+     
+
+
+
     return  (
         <MessagesContext.Provider
            value={{
@@ -124,6 +160,7 @@ const MessagesProvider = ( {children } : ChildProp) => {
             dispatch,
             getMessagesByConversationId,
             postMessage,
+            toggleLikeMessage
            }}
            >
             { children }

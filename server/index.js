@@ -407,6 +407,52 @@ app.delete('/conversations/:id', authMiddleware, async (req, res) => {
   }
 });
 
+// PATCH route to toggle like on a message
+app.patch('/messages/:id/like', authMiddleware, async (req, res) => {
+  console.log("Received PATCH request to toggle like");
+  console.log("Message ID:", req.params.id);
+  console.log("User ID from header:", req._id);
+  const client = new MongoClient(DB_CONNECTION);
+  try {
+      const messageId = req.params.id;
+      const userId = req._id;
+
+      await client.connect();
+      const db = client.db('chat_palace');
+
+      const message = await db.collection('messages').findOne({ _id: messageId });
+      console.log("Found message:", message);
+
+      if (!message) {
+        console.log("Message not found");
+          return res.status(404).send({ error: "Message not found" });
+      }
+
+      const isLiked = message.likes.includes(userId);
+      console.log("Is liked by user:", isLiked);
+
+      const update = isLiked
+          ? { $pull: { likes: userId } }  // Remove userId from likes if already liked
+          : { $push: { likes: userId } }; // Add userId to likes if not liked
+
+      const updatedMessage = await db.collection('messages').findOneAndUpdate(
+          { _id: messageId },
+          update,
+          { returnDocument: "after" }
+      );
+
+      console.log("Updated message:", updatedMessage.value);
+
+      res.status(200).json(updatedMessage.value);
+  } catch (error) {
+      console.error("Error toggling like:", error);
+      res.status(500).json({ error: "Failed to toggle like" });
+  } finally {
+      await client.close();
+  }
+});
+
+
 
 
 
