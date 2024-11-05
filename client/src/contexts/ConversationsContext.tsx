@@ -122,11 +122,7 @@ const ConversationsProvider = ({children}: ChildProp) => {
 
                 console.log("Fetched conversations:", data);
 
-                const filteredConversations = data.filter((conversation: ConversationType) => 
-                    conversation.user1 === userId || conversation.user2 === userId
-                );
-
-                dispatch({ type: 'setConversations', data: filteredConversations });
+                dispatch({ type: 'setConversations', data });
             } catch (error) {
                 console.error("Failed to fetch conversations:", error);
             }

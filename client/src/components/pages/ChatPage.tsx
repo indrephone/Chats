@@ -1,5 +1,6 @@
 import { useContext, useState, useEffect} from "react";
 import { useParams } from "react-router-dom";
+import styled from "styled-components";
 import MessagesContext, { MessageType, MessagesContextTypes } from '../../contexts/MessagesContext';
 import UsersContext from '../../contexts/UsersContext';
 import ConversationsContext, { ConversationsContextTypes } from '../../contexts/ConversationsContext';
@@ -11,6 +12,25 @@ type ChatPageProps = {
  };
 // Define a type for creating a new message without `_id`
 type NewMessageType = Omit<MessageType, '_id'>;
+
+const ChatContainer = styled.section`
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+`;
+
+const MessageListContainer = styled.div`
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+`;
+
+const MessageInputContainer = styled.div`
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+`;
 
 const ChatPage = () => {
     const { conversationId } = useParams<{ conversationId: string }>(); // Get conversationId from URL parameters
@@ -74,7 +94,7 @@ const ChatPage = () => {
       };
  
     return ( 
-        <section>
+        <ChatContainer>
              <h1>
                 Chat Page with
                 {chatPartner && (
@@ -88,14 +108,17 @@ const ChatPage = () => {
                      </span>
                 )}
             </h1>
-             <MessageList messages={messages} users={users} />
-             <MessageInput
-                value={newMessage}
-                onChange={e => setNewMessage(e.target.value)}
-                onSendMessage={handleSendMessage}
-            />
-             
-        </section>
+            <MessageListContainer>
+                  <MessageList messages={messages} users={users} loggedInUserId={loggedInUser._id}/>
+             </MessageListContainer>
+             <MessageInputContainer>
+                 <MessageInput
+                    value={newMessage}
+                    onChange={e => setNewMessage(e.target.value)}
+                    onSendMessage={handleSendMessage}
+                 />
+                </MessageInputContainer>
+        </ChatContainer>
      );
 }
  
