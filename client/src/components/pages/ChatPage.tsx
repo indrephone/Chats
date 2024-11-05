@@ -88,7 +88,7 @@ const ChatPage = () => {
                      </span>
                 )}
             </h1>
-             <MessageList messages={messages} users={users} />
+             <MessageList messages={messages} users={users} loggedInUserId={loggedInUser._id}/>
              <MessageInput
                 value={newMessage}
                 onChange={e => setNewMessage(e.target.value)}

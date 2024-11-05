@@ -5,12 +5,18 @@ import MessageCard from "../organisms/MessageCard";
 type MessageListProps = {
     messages: MessageType[];
     users: UserType[];
+    loggedInUserId: string;
 };
 
-const MessageList = ({ messages, users }: MessageListProps) => (
+const MessageList = ({ messages, users, loggedInUserId }: MessageListProps) => (
     <div>
         {messages.map(message => (
-            <MessageCard key={message._id} message={message} users={users} />
+            <MessageCard 
+               key={message._id} 
+               message={message} 
+               users={users} 
+               loggedInUserId={loggedInUserId}
+               />
         ))}
     </div>
 );
