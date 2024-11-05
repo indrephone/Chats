@@ -10,13 +10,28 @@ const OtherUserStyle = styled.section`
   align-items: center;
   padding: 20px;
   text-align: center;
+`;
+const ProfileImage = styled.img`
+  max-height: 200px;
+  max-width: 400px;
+  min-height: 100px;
+  min-width: 100px;
+  object-fit: contain;
+  border: 1px solid #000;
+  border-radius: 50%;
+`;
+const StartConversationButton = styled.img`
+  cursor: pointer;
+  width: 200px;
+  height: 100px;
+  margin-top: 20px;
 
-  img {
-    max-height: 200px;
-    max-width: 200px;
-    min-height: 100px;
-    min-width: 100px;
-    object-fit: contain;
+  &:hover {
+    content: url('/start_conversation_active.svg');
+  }
+
+  &:active {
+    content: url('/start_conversation_active.svg');
   }
 `;
 
@@ -58,9 +73,15 @@ const UserPage = () => {
         <OtherUserStyle>
             <h1>User Profile</h1>
                <p>Username: {user.username}</p>
-               <img src={user.profileImage || "/default_profile_image.svg"} 
-                    alt={`${user.username}'s profile`} />
-                <button onClick={handleStartConversation}>Start Conversation</button> 
+               <ProfileImage
+                  src={user.profileImage || "/default_profile_image.svg"} 
+                  alt={`${user.username}'s profile`} 
+                />
+               <StartConversationButton 
+                  src="/start_conversation.svg" 
+                  alt="Start Conversation" 
+                  onClick={handleStartConversation}
+               />  
         </OtherUserStyle>
      );
 }
