@@ -11,6 +11,7 @@ const StyledHeader = styled.header`
    display: flex;
    justify-content: space-between;
    align-items: center;
+   background-color: #505544;
 
    nav ul {
     display: flex;
@@ -67,13 +68,15 @@ const StyledHeader = styled.header`
       font-size: 18px;
       margin-right: 10px;
       /* text-decoration: none; */
-      color: inherit;
+      color: #fff;
       cursor: pointer;
     }
 
     button {
       padding: 5px 10px;
       font-size: 16px;
+      color: #fff;
+      background-color: #666;
       cursor: pointer;
     }
   }
@@ -110,7 +113,7 @@ const Header = () => {
           <li>
             <NavLink to="/conversations">
              <IconContainer>
-                <img src="/chat_white.svg" alt="chat button" />
+                <img src="/chat_white2.svg" alt="chat button" />
                   {conversationCount > 0 && (
                   <Badge>{conversationCount}</Badge>  // Show badge if there are conversations
                 )}

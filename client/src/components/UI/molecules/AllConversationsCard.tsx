@@ -16,7 +16,6 @@ const CardDiv = styled.div`
   gap: 10px;
   padding: 20px;
   background-color: #f5f5f5;
-  border-bottom: 1px solid #ccc;
   cursor: pointer;
 
   img {

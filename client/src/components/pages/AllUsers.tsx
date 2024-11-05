@@ -7,6 +7,7 @@ import AllUsersCard from '../UI/molecules/AllUsersCard';
 
 const StyledSection = styled.section`
   padding: 10px 30px;
+  background-color: #6d6565;
 `;
 
 const AllUsers = () => {

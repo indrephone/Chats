@@ -27,16 +27,22 @@ const MessageHeader = styled.div`
 const Username = styled.span`
     font-weight: bold;
     margin-right: 8px;
+    color: #d3d2d2;
 `;
 
 const Timestamp = styled.span`
     font-size: 0.8rem;
-    color: #666;
+    /* color: #666; */
+    color: #b6b6b6;
 `;
 
 const MessageContent = styled.p`
     font-size: 1rem;
+    padding: 8px 20px;
     margin: 4px 0;
+    background-color: #fff;
+    border-radius: 20px;
+    border: 1px solid #afafaf;
 `;
 
 const LikeSection = styled.div`

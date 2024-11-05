@@ -17,6 +17,12 @@ const ChatContainer = styled.section`
     display: flex;
     flex-direction: column;
     height: 80vh;
+    /* background-color: #f5f5f5; */
+    background-color: #6d6565;
+    /* background-image: url('/message_background1.png');
+    background-size: cover;       
+    background-position: center;  
+    background-repeat: no-repeat; */
 `;
 
 const MessageListContainer = styled.div`
