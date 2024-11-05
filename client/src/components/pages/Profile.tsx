@@ -6,7 +6,6 @@ const ProfileStyle = styled.section`
   display: flex;
   flex-direction:column;
   align-items: center;
-  border: 1px solid #ccc;
 
   img {
     max-height: 200px;

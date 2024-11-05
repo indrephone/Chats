@@ -9,6 +9,7 @@ import DeleteConversationButton from '../UI/organisms/DeleteConversationsButton'
 
 const StyledSection = styled.section`
   padding: 10px 30px;
+  background-color: #6d6565;
 `;
 
 const UnreadIndicator = styled.span`
@@ -21,7 +22,6 @@ const StyleNewDeletDiv = styled.div`
   border-bottom: 1px solid #ccc;
   gap: 10px;
 `;
-
 
 
 const Conversations = () => {

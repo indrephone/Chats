@@ -29,7 +29,7 @@ const TextInput = styled.input`
     outline: none;
     height: 100%;
     box-sizing: border-box;
-    background-color: #534c02;
+    background-color: #7e750a;
     color: white;
 `;
 

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="36.981064mm"
+   height="8.3228302mm"
+   viewBox="0 0 36.981064 8.3228302"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e4, 2022-07-14)"
+   sodipodi:docname="chat-wireframes-kopija.svg"
+   inkscape:export-filename="chat-wireframes3.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="false"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.2574164"
+     inkscape:cx="883.95538"
+     inkscape:cy="664.45769"
+     inkscape:window-width="1291"
+     inkscape:window-height="795"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-472.90909,-385.70961)">
+    <g
+       id="g3655">
+      <rect
+         style="fill:#530fb8;fill-opacity:1;fill-rule:evenodd;stroke:#8080ff;stroke-width:0.326057;stroke-linecap:square;stroke-miterlimit:4.1;stroke-dasharray:none;stroke-opacity:1"
+         id="rect2514-8-6-5-7-0-0-7-9-8-0"
+         width="36.655022"
+         height="7.9967575"
+         x="473.07211"
+         y="385.87265" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.41369px;font-family:'Apple SD Gothic Neo';-inkscape-font-specification:'Apple SD Gothic Neo, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f2059c;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:0.174;stroke-linecap:square;stroke-miterlimit:4.1;stroke-dasharray:none;stroke-opacity:1"
+         x="472.66879"
+         y="393.16605"
+         id="text3365-5-5-0-3-8-3-1-5-0-3-3"
+         transform="scale(1.0042449,0.99577304)"><tspan
+           sodipodi:role="line"
+           id="tspan3363-4-5-5-3-0-9-5-4-5-9-9"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.41369px;font-family:'Apple SD Gothic Neo';-inkscape-font-specification:'Apple SD Gothic Neo, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f2059c;fill-opacity:1;stroke:none;stroke-width:0.174;stroke-dasharray:none"
+           x="472.66879"
+           y="393.16605">Start Conversation</tspan></text>
+    </g>
+  </g>
+</svg>

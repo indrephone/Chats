@@ -8,7 +8,6 @@ const OtherUserStyle = styled.section`
   display: flex;
   flex-direction:column;
   align-items: center;
-  border: 1px solid #ccc;
   padding: 20px;
   text-align: center;
 
