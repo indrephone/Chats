@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import MessagesContext, { MessageType, MessagesContextTypes } from '../../contexts/MessagesContext';
 import UsersContext from '../../contexts/UsersContext';
 import ConversationsContext, { ConversationsContextTypes } from '../../contexts/ConversationsContext';
-import MessageList from '../UI/atoms/MessageList';  // Component for displaying list of messages
+import MessageList from '../UI/molecules/MessageList';  // Component for displaying list of messages
 import MessageInput from "../UI/atoms/MessageInput"; // Component for message input
 
 type ChatPageProps = {

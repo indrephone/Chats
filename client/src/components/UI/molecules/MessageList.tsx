@@ -1,6 +1,6 @@
 import { MessageType } from '../../../contexts/MessagesContext';
 import { UserType } from '../../../contexts/UsersContext';
-import MessageCard from "./MessageCard";
+import MessageCard from "../organisms/MessageCard";
 
 type MessageListProps = {
     messages: MessageType[];
