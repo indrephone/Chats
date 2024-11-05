@@ -16,6 +16,12 @@ const UnreadIndicator = styled.span`
   font-weight: bold;
   margin-left: 8px;
 `;
+const StyleNewDeletDiv = styled.div`
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ccc;
+  gap: 10px;
+`;
+
 
 
 const Conversations = () => {
@@ -51,14 +57,14 @@ const Conversations = () => {
             <div>
                 {filteredConversations.length > 0 ? (
                    filteredConversations.map(conversation => (
-                      <div key={conversation._id} style={{ display: 'flex', alignItems: 'center' }}>
+                      <StyleNewDeletDiv key={conversation._id} style={{ display: 'flex', alignItems: 'center' }}>
                         <AllConversationsCard
                            data={conversation}
                            onClick={() => chooseConversationIfExists(conversation._id)}
                         />
                     {conversation.hasUnreadMessages && <UnreadIndicator>New</UnreadIndicator>}
                     <DeleteConversationButton conversationId={conversation._id} />
-                   </div>
+                   </StyleNewDeletDiv>
                    ))
                 ) : (
                     <p>Choose another user to start a conversation.</p>
