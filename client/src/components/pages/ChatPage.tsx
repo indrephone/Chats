@@ -26,8 +26,10 @@ const MessageListContainer = styled.div`
 `;
 
 const MessageInputContainer = styled.div`
-    padding: 10px;
-    border-top: 1px solid #ccc;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
 `;
 
 const ChatPage = () => {
@@ -96,7 +98,7 @@ const ChatPage = () => {
              <h1>
                 Chat Page with
                 {chatPartner && (
-                     <span style={{ marginLeft: '30px', display: 'inline-flex', alignItems: 'center' }}>
+                     <span style={{ marginLeft: '10px', display: 'inline-flex', alignItems: 'center' }}>
                          <img 
                              src={chatPartner.profileImage || "/default_profile_image.svg"} 
                              alt={chatPartner.username} 

@@ -1,5 +1,6 @@
 import { ChangeEvent, useState} from 'react';
 import * as Yup from 'yup';
+import styled from 'styled-components';
 
 type MessageInputProps = {
     value: string;
@@ -10,6 +11,34 @@ type MessageInputProps = {
 const messageSchema = Yup.string()
     .min(2, 'Message must be at least 2 characters')
     .max(1000, 'Message cannot exceed 1000 characters');
+
+const InputContainer = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+   
+    box-sizing: border-box;
+`;
+
+const TextInput = styled.input`
+    flex: 1;
+    padding: 15px;
+    font-size: 1rem;
+    border: none;
+    outline: none;
+    height: 100%;
+    box-sizing: border-box;
+    background-color: #534c02;
+    color: white;
+`;
+
+const SendButton = styled.img`
+    cursor: pointer;
+    height: 100%;
+  
+`;
+
 
 const MessageInput = ({ value, onChange, onSendMessage}: MessageInputProps) => {
     const [error, setError] = useState<string | null>(null);
@@ -28,17 +57,23 @@ const MessageInput = ({ value, onChange, onSendMessage}: MessageInputProps) => {
 
 
     return ( 
-        <div>
-        <input
+        <InputContainer>
+        <TextInput
             type="text"
             value={value}
             onChange={onChange}
             placeholder="Type a message"
         />
-        <button onClick={handleSendMessage}>Send</button>
-        {error && <p style={{ color: 'red' }}>{error}</p>} 
-        <p>{value.length} / 1000 characters</p> 
-    </div> 
+        <SendButton 
+            src="/send-button.svg"
+            alt="Send"
+            onClick={handleSendMessage}
+            onMouseOver={(e) => (e.currentTarget.src = "/send-button-active.svg")}
+            onMouseOut={(e) => (e.currentTarget.src = "/send-button.svg")}
+            /> 
+        {error && <p style={{ color: 'red', marginLeft: '10px' }}>{error}</p>} 
+        {/* <p>{value.length} / 1000 characters</p>  */}
+    </InputContainer> 
      );
 }
  

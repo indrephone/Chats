@@ -60,7 +60,7 @@ const MessageCard = ({ message, users, loggedInUserId }: MessageCardProps) => {
     return (
         <MessageCardContainer>
             <MessageHeader>
-                <ProfileImage src={sender?.profileImage} alt={`${sender?.username}'s profile`} />
+                <ProfileImage src={sender?.profileImage || "/default_profile_image.svg"} alt={`${sender?.username}'s profile`} />
                 <Username>{sender?.username}</Username>
                 <Timestamp>{new Date(message.timestamp).toLocaleTimeString()}</Timestamp>
             </MessageHeader>
