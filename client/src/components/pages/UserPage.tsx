@@ -3,23 +3,9 @@ import { useState, useEffect, useContext} from 'react';
 import { UserType } from '../../contexts/UsersContext';
 import styled from 'styled-components';
 import ConversationsContext, { ConversationsContextTypes} from '../../contexts/ConversationsContext';
+import { StyledHeader, ProfileSection, ProfileImage, StyledUserNameHeader } from '../styles/AllPageStyles';
 
-const OtherUserStyle = styled.section`
-  display: flex;
-  flex-direction:column;
-  align-items: center;
-  padding: 20px;
-  text-align: center;
-`;
-const ProfileImage = styled.img`
-  max-height: 200px;
-  max-width: 400px;
-  min-height: 100px;
-  min-width: 100px;
-  object-fit: contain;
-  border: 1px solid #000;
-  border-radius: 50%;
-`;
+
 const StartConversationButton = styled.img`
   cursor: pointer;
   width: 200px;
@@ -70,9 +56,9 @@ const UserPage = () => {
     }
 
     return ( 
-        <OtherUserStyle>
-            <h1>User Profile</h1>
-               <p>Username: {user.username}</p>
+        <ProfileSection>
+            <StyledHeader>User Profile</StyledHeader>
+               <StyledUserNameHeader>Username: {user.username}</StyledUserNameHeader>
                <ProfileImage
                   src={user.profileImage || "/default_profile_image.svg"} 
                   alt={`${user.username}'s profile`} 
@@ -82,7 +68,7 @@ const UserPage = () => {
                   alt="Start Conversation" 
                   onClick={handleStartConversation}
                />  
-        </OtherUserStyle>
+        </ProfileSection>
      );
 }
  

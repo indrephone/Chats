@@ -39,7 +39,7 @@ export const StyledInput = styled.input`
   width: 100%;
   padding: 10px;
   font-size: 16px;
-  margin-bottom: 10px;
+  /* margin-bottom: 2px; */
   box-sizing: border-box;
 
   &:focus {
@@ -73,7 +73,7 @@ export const SubmitButton = styled.input`
   }
 `;
 
-export const StyledLabel = styled.label`
+export const StyledFormLabel = styled.label`
   color: white;
   font-size: 18px; 
   margin-bottom: 5px; 

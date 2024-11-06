@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 
 import UsersContext, { UsersContextTypes} from "../../contexts/UsersContext";
 import {FormContainer, FormWrapper, StyledInput, SubmitButton} from '../styles/FormStyles';
+import { StyledHeader } from '../styles/AllPageStyles';
 
 
 const Login = () => {
@@ -49,7 +50,7 @@ const Login = () => {
       });
     return ( 
         <FormContainer>
-            <h2>Login</h2>
+            <StyledHeader>Login</StyledHeader>
             <FormWrapper onSubmit={formik.handleSubmit}>
                 <div>
                     <StyledInput

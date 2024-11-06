@@ -6,6 +6,7 @@ import UsersContext from '../../contexts/UsersContext';
 import ConversationsContext, { ConversationsContextTypes } from '../../contexts/ConversationsContext';
 import MessageList from '../UI/molecules/MessageList';  // Component for displaying list of messages
 import MessageInput from "../UI/atoms/MessageInput"; // Component for message input
+import { StyledHeader } from '../styles/AllPageStyles';
 
 
 // Define a type for creating a new message without `_id`
@@ -99,8 +100,7 @@ const ChatPage = () => {
  
     return ( 
         <ChatContainer>
-             <h1>
-                Chat Page with
+             <StyledHeader> Chat Page with
                 {chatPartner && (
                      <span style={{ marginLeft: '10px', display: 'inline-flex', alignItems: 'center' }}>
                          <img 
@@ -111,7 +111,7 @@ const ChatPage = () => {
                          {chatPartner.username}
                      </span>
                 )}
-            </h1>
+            </StyledHeader>
             <MessageListContainer>
                   <MessageList messages={messages} users={users} loggedInUserId={loggedInUser._id}/>
              </MessageListContainer>

@@ -1,23 +1,8 @@
 import { useContext} from 'react';
 import UsersContext,{ UsersContextTypes } from '../../contexts/UsersContext';
-import styled from 'styled-components';
 
-const ProfileStyle = styled.section`
-  display: flex;
-  flex-direction:column;
-  align-items: center;
-  padding: 20px;
-  text-align: center;
-`;
-const YourImage = styled.img`
-  max-height: 200px;
-  max-width: 400px;
-  min-height: 100px;
-  min-width: 100px;
-  object-fit: contain;
-  border: 1px solid #000;
-  border-radius: 50%;
-`;
+import { StyledHeader, ProfileSection, ProfileImage, StyledUserNameHeader} from '../styles/AllPageStyles';
+
 
 
 const Profile = () => {
@@ -26,13 +11,13 @@ const Profile = () => {
    if(!loggedInUser) return <p>Loading...</p>;
 
     return ( 
-        <ProfileStyle>
-            <h1>Profile - Welcome to the Chat Palace!</h1>
-            <h3>{loggedInUser.username}</h3>
-            <YourImage 
+        <ProfileSection>
+            <StyledHeader>Welcome to the Chat Palace!</StyledHeader>
+            <StyledUserNameHeader>{loggedInUser.username}</StyledUserNameHeader>
+            <ProfileImage 
                src={loggedInUser.profileImage || "/default_profile_image.svg"} 
                alt={`${loggedInUser.username}'s profile`} />
-        </ProfileStyle>
+        </ProfileSection>
      );
 }
  
