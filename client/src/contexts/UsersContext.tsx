@@ -16,6 +16,7 @@ export type UserRegistrationType = {
 export type UserRegistrationPayload = Omit<UserRegistrationType, 'passwordRepeat'>;
 
 export type ErrorOrSuccessReturn = {error?: string, success?: string};
+
 export type UsersContextTypes ={
     users: UserType[],
     addNewUser: (user: UserRegistrationPayload) => Promise<ErrorOrSuccessReturn>,
@@ -54,7 +55,7 @@ const UsersProvider = ({children}: ChildProp) => {
    const [loggedInUser, setLoggedInUser] = useState<null | UserType>(null);
    
 
-   const addNewUser = async (user: UserRegistrationType): Promise<ErrorOrSuccessReturn> => {
+   const addNewUser = async (user: UserRegistrationPayload): Promise<ErrorOrSuccessReturn> => {
     try {
       // Log the user data before sending to the backend
     console.log("Sending user data to backend:", user);
