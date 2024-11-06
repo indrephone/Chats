@@ -6,12 +6,8 @@ import ConversationsContext, { ConversationsContextTypes } from '../../contexts/
 import UsersContext, { UsersContextTypes } from '../../contexts/UsersContext';
 import AllConversationsCard from '../UI/molecules/AllConversationsCard';
 import DeleteConversationButton from '../UI/organisms/DeleteConversationsButton';
-import { StyledHeader } from '../styles/AllPageStyles';
+import { StyledHeader , StyledSectionForLists} from '../styles/AllPageStyles';
 
-const StyledSection = styled.section`
-  padding: 10px 30px;
-  background-color: #6d6565;
-`;
 
 const UnreadIndicator = styled.span`
   color: red;
@@ -53,7 +49,7 @@ const Conversations = () => {
 
 
     return ( 
-        <StyledSection>
+        <StyledSectionForLists>
             <StyledHeader>Conversations</StyledHeader>
             <div>
                 {filteredConversations.length > 0 ? (
@@ -72,7 +68,7 @@ const Conversations = () => {
                 )}
             </div>
             
-        </StyledSection>
+        </StyledSectionForLists>
      );
 }
  

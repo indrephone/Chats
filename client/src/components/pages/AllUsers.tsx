@@ -3,13 +3,8 @@ import { useContext } from 'react';
 import UsersContext, { UsersContextTypes} from '../../contexts/UsersContext';
 import AllUsersCard from '../UI/molecules/AllUsersCard';
 
-import { StyledHeader } from '../styles/AllPageStyles';
-import styled from 'styled-components';
+import { StyledHeader, StyledSectionForLists } from '../styles/AllPageStyles';
 
-const StyledSection = styled.section`
-  padding: 10px 30px;
-  background-color: #6d6565;
-`;
 
 const AllUsers = () => {
 
@@ -19,7 +14,7 @@ const { users, loggedInUser } = useContext(UsersContext) as UsersContextTypes;
   const filteredUsers = users.filter(user => user._id !== loggedInUser?._id);
 
     return ( 
-        <StyledSection>
+        <StyledSectionForLists>
              <StyledHeader>All Users</StyledHeader>
             <div>
                    {filteredUsers.map(user =>
@@ -31,7 +26,7 @@ const { users, loggedInUser } = useContext(UsersContext) as UsersContextTypes;
                 
                 )}
             </div>
-        </StyledSection>
+        </StyledSectionForLists>
      );
 }
  
