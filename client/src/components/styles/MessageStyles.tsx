@@ -38,6 +38,7 @@ export const Username = styled.span`
 export const Timestamp = styled.span`
   font-size: 0.8rem;
   color: #b6b6b6;
+  margin-right: 8px;
 `;
 
 export const MessageContent = styled.p<{ isOwnMessage: boolean }>`
@@ -60,4 +61,12 @@ export const LikeSection = styled.div`
   font-size: 0.9rem;
   margin-top: 4px;
   color: #a4a4a4;
+`;
+export const LikeButtonStyle = styled.button`
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 4px;
 `;
