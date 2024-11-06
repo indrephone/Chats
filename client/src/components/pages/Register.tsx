@@ -60,11 +60,21 @@ const SubmitButton = styled.input`
   cursor: pointer;
   background-color: #7b68ee;
   color: white;
-  border: 1px solid #000;
-  outline: 1px solid #8e67d2;
+  outline: none;
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease, font-weight 0.3s ease;
+ 
+  &:hover {
+    color: #ff00ea;
+    background-color: #6a5acd;
+    font-size: 17px;
+    font-weight: bold;
+  }
 
-  &:focus {
-    outline: 2px solid #4c3ccf; 
+  &:active {
+    background-color: #4c3ccf;
+    font-size: 17px;
+    font-weight: bold; 
   }
 `;
 
