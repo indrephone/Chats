@@ -13,7 +13,7 @@ export const CardDiv = styled.div`
   gap: 10px;
   padding: 20px;
   background-color: #492f2f;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #515151;
   cursor: pointer;
 `;
 
