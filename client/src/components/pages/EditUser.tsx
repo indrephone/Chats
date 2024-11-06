@@ -18,7 +18,7 @@ const EditUser: React.FC = () => {
   useEffect(() => {
     if (id) {
       const fetchedUser = returnSpecificUser(id);
-      console.log("Fetched User:", fetchedUser);
+      // console.log("Fetched User:", fetchedUser);
       setUser(fetchedUser);
     }
   }, [id, returnSpecificUser]);

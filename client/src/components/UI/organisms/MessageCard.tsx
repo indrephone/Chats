@@ -26,14 +26,14 @@ const MessageCard = ({ message, users, loggedInUserId }: MessageCardProps) => {
     const likeCount = message.likes ? message.likes.length : 0;
 
     return (
-        <MessageCardContainer isOwnMessage={isOwnMessage}>
-            <MessageHeader isOwnMessage={isOwnMessage}>
-                <ProfileImage isOwnMessage={isOwnMessage} src={sender?.profileImage || "/default_profile_image.svg"} alt={`${sender?.username}'s profile`} />
+        <MessageCardContainer $isOwnMessage={isOwnMessage}>
+            <MessageHeader $isOwnMessage={isOwnMessage}>
+                <ProfileImage $isOwnMessage={isOwnMessage} src={sender?.profileImage || "/default_profile_image.svg"} alt={`${sender?.username}'s profile`} />
                 <Username>{sender?.username}</Username>
                 <Timestamp>{new Date(message.timestamp).toLocaleTimeString()}</Timestamp>
             </MessageHeader>
           
-            <MessageContent isOwnMessage={isOwnMessage}>{message.content}</MessageContent>
+            <MessageContent $isOwnMessage={isOwnMessage}>{message.content}</MessageContent>
 
             <LikeSection>
                 {!isOwnMessage &&  <LikeButton messageId={message._id} isLiked={isLiked} />}
