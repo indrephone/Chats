@@ -2,71 +2,10 @@ import { useFormik } from "formik";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from 'yup';
 import { useContext, useState } from "react";
-import styled from 'styled-components';
 
 import UsersContext, { UsersContextTypes} from "../../contexts/UsersContext";
+import {FormContainer, FormWrapper, StyledInput, SubmitButton} from '../styles/FormStyles';
 
-const LoginContainer = styled.section`
-    display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-
-  h2 {
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 300px;
-    gap: 10px;
-  }
-
-  p {
-    margin-top: 15px;
-    text-align: center;
-  }
-`;
-const FormWrapper = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 300px;
-  gap: 10px; 
-
-  > div{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-`;
-const StyledInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-`;
-const SubmitButton = styled.input`
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #7b68ee;
-  color: white;
-  border: 1px solid #000;
-  outline: 1px solid #8e67d2;
-
-  &:focus {
-    outline: 2px solid #4c3ccf; 
-  }
-`;
 
 const Login = () => {
 
@@ -89,16 +28,16 @@ const Login = () => {
            .matches(
              /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,25}$/,
              'Slaptažodis privalo turėti bent: vieną mažąją raidę, vieną didžiąją raidę, vieną skaičių, vieną specialų simbolį (@$!%*?&) ir ilgis privalo būti tarp 8 ir 25 simbolių.'
-           ).required('Šis laukas yra privalomas.')  
+           ).required('Field must be filled')  
          }),
          onSubmit: async (values) => {
             try {
                 // console.log(values);
                 const loginResponse = await logUserIn(values);
                 if("error" in loginResponse){ 
-                  setLoginMessage(loginResponse.error);
+                  setLoginMessage(loginResponse.error || '');
                 } else {
-                  setLoginMessage(loginResponse.success);
+                  setLoginMessage(loginResponse.success || '');
                   setTimeout(() => {
                     navigate('/profile');
                   }, 3000);
@@ -109,7 +48,7 @@ const Login = () => {
             }  
       });
     return ( 
-        <LoginContainer>
+        <FormContainer>
             <h2>Login</h2>
             <FormWrapper onSubmit={formik.handleSubmit}>
                 <div>
@@ -144,7 +83,7 @@ const Login = () => {
             </FormWrapper>
             { loginMessage && <p>{loginMessage}</p> }
             <p>Do not have account? Go to <Link to="/register">Register</Link></p>
-        </LoginContainer>
+        </FormContainer>
      );
 }
  
