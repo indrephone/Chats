@@ -23,7 +23,7 @@ const StyleNewDeletDiv = styled.div`
 
 const Conversations = () => {
    const { conversations,  setActiveConversation  } = useContext(ConversationsContext) as ConversationsContextTypes;
-   console.log("Conversations from context:", conversations);
+  //  console.log("Conversations from context:", conversations);
 
    const { users } = useContext(UsersContext) as UsersContextTypes;
    const navigate = useNavigate();

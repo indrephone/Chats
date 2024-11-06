@@ -58,7 +58,7 @@ const UsersProvider = ({children}: ChildProp) => {
    const addNewUser = async (user: UserRegistrationPayload): Promise<ErrorOrSuccessReturn> => {
     try {
       // Log the user data before sending to the backend
-    console.log("Sending user data to backend:", user);
+    // console.log("Sending user data to backend:", user);
 
      const res = await fetch(`/api/users`, {
         method: "POST",
@@ -106,7 +106,7 @@ const UsersProvider = ({children}: ChildProp) => {
 
   const logUserIn = async (userLoginInfo: Pick<UserType, 'username' | 'password'>): Promise<ErrorOrSuccessReturn> => {
     try {
-      console.log(userLoginInfo);
+      // console.log(userLoginInfo);
       const res = await fetch(`/api/users/login`, {
         method: "POST",
         headers: {

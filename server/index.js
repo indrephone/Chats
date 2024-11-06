@@ -103,8 +103,7 @@ app.post('/users/login', async (req, res) => {
       
       // tinkamas username ir password
       res.status(200).json(user ); 
-    
-    
+      
   } catch(err) {
     console.error(err);
     res.status(500).send({ error: err });
@@ -119,7 +118,7 @@ app.patch('/edit-user/:id', async (req, res) => {
   try {
     const { username, profileImage, password } = req.body;
     const id = req.params.id;
-    console.log(req.body)
+    // console.log(req.body)
 
     // Fetch the current user from the database to get the existing password
     const currentUser = await client
@@ -133,12 +132,12 @@ app.patch('/edit-user/:id', async (req, res) => {
 
     // Check if a new password is provided and is not empty
     if (password && password.trim()) {
-      console.log(password)
+      // console.log(password)
       const hashedPassword = bcrypt.hashSync(password, 10);  // Hash the password
       updateFields.password = hashedPassword;  // Update hashed password
     } 
     // Log updateFields for debugging
-    console.log("Updating user with fields:", updateFields);
+    // console.log("Updating user with fields:", updateFields);
 
     // Update the user document in MongoDB
     const editResponse = await client
@@ -147,7 +146,7 @@ app.patch('/edit-user/:id', async (req, res) => {
       .updateOne({ _id: id }, { $set: updateFields });
 
        // Log the MongoDB update response
-    console.log("MongoDB Update Response:", editResponse);
+    // console.log("MongoDB Update Response:", editResponse);
 
     if (editResponse.modifiedCount === 0) {
       return res.status(500).send({ error: "Failed to update user." });
@@ -315,8 +314,8 @@ app.post('/conversations/:id/messages', authMiddleware, async (req, res) => {
     const { content } = req.body; // Expecting `content` in the request body
 
      // Debugging logs
-     console.log("Conversation ID:", conversationId);
-     console.log("Sender ID:", senderId);
+    //  console.log("Conversation ID:", conversationId);
+    //  console.log("Sender ID:", senderId);
 
     // Create a new message object
     const newMessage = {
@@ -338,7 +337,7 @@ app.post('/conversations/:id/messages', authMiddleware, async (req, res) => {
     );
 
       // Debugging log to check the result of the update operation
-      console.log("Update Result:", updateResult);
+      // console.log("Update Result:", updateResult);
 
     res.status(201).send(newMessage); // Respond with the newly created message
   } catch (err) {
@@ -359,7 +358,7 @@ app.delete('/conversations/:id', authMiddleware, async (req, res) => {
     const conversationId = req.params.id;
     const userId = req._id;
 
-    console.log("Attempting to delete conversation with ID:", conversationId, "by user:", userId);
+    // console.log("Attempting to delete conversation with ID:", conversationId, "by user:", userId);
 
     await client.connect();
     const db = client.db('chat_palace');
@@ -370,21 +369,21 @@ app.delete('/conversations/:id', authMiddleware, async (req, res) => {
       $or: [{ user1: userId }, { user2: userId }]
     });
 
-    console.log("Conversation found:", conversation);
+    // console.log("Conversation found:", conversation);
      
     if (!conversation) {
-      console.log("User is not a participant in the conversation or conversation not found.");
+      // console.log("User is not a participant in the conversation or conversation not found.");
       return res.status(403).json({ message: "Forbidden: You are not a participant in this conversation" });
     }
 
     // Step 2: Delete the conversation document
     const deleteConversationResult = await db.collection('conversations').deleteOne({ _id: conversationId });
-    console.log("Conversation delete result:", deleteConversationResult);
+    // console.log("Conversation delete result:", deleteConversationResult);
 
 
     if (deleteConversationResult.deletedCount === 1) {
       // Step 3: Directly delete all messages with the conversationId
-      console.log("Deleting messages with conversationId:", conversationId);
+      // console.log("Deleting messages with conversationId:", conversationId);
 
       const deleteMessagesResult = await db.collection('messages').deleteMany({ conversationId: conversationId });
       console.log("Messages delete result:", deleteMessagesResult);
@@ -396,7 +395,7 @@ app.delete('/conversations/:id', authMiddleware, async (req, res) => {
         deletedMessagesCount: deleteMessagesResult.deletedCount
       });
     } else {
-      console.log("Conversation not found or already deleted.");
+      // console.log("Conversation not found or already deleted.");
       res.status(404).json({ message: "Conversation not found or already deleted" });
     }
   } catch (err) {
@@ -409,9 +408,9 @@ app.delete('/conversations/:id', authMiddleware, async (req, res) => {
 
 // PATCH route to toggle like on a message
 app.patch('/messages/:id/like', authMiddleware, async (req, res) => {
-  console.log("Received PATCH request to toggle like");
-  console.log("Message ID:", req.params.id);
-  console.log("User ID from header:", req._id);
+  // console.log("Received PATCH request to toggle like");
+  // console.log("Message ID:", req.params.id);
+  // console.log("User ID from header:", req._id);
   const client = new MongoClient(DB_CONNECTION);
   try {
       const messageId = req.params.id;
@@ -421,15 +420,15 @@ app.patch('/messages/:id/like', authMiddleware, async (req, res) => {
       const db = client.db('chat_palace');
 
       const message = await db.collection('messages').findOne({ _id: messageId });
-      console.log("Found message:", message);
+      // console.log("Found message:", message);
 
       if (!message) {
-        console.log("Message not found");
+        // console.log("Message not found");
           return res.status(404).send({ error: "Message not found" });
       }
 
       const isLiked = message.likes.includes(userId);
-      console.log("Is liked by user:", isLiked);
+      // console.log("Is liked by user:", isLiked);
 
       const update = isLiked
           ? { $pull: { likes: userId } }  // Remove userId from likes if already liked
@@ -441,7 +440,7 @@ app.patch('/messages/:id/like', authMiddleware, async (req, res) => {
           { returnDocument: "after" }
       );
 
-      console.log("Updated message:", updatedMessage.value);
+      // console.log("Updated message:", updatedMessage.value);
 
       res.status(200).json(updatedMessage.value);
   } catch (error) {

@@ -108,7 +108,7 @@ const MessagesProvider = ( {children } : ChildProp) => {
             }
 
             const savedMessage: MessageType = await response.json(); // Assume backend response includes `_id`
-            console.log("Saved message from backend:", savedMessage);
+            // console.log("Saved message from backend:", savedMessage);
 
             dispatch({ type: 'postMessages', newMessage: savedMessage });
         } catch (error) {
@@ -121,8 +121,8 @@ const MessagesProvider = ( {children } : ChildProp) => {
     //like messages
     const toggleLikeMessage = async (messageId: string) => {
         const loggedInUserId = JSON.parse(localStorage.getItem('loggedInUser') || '{}')._id;
-        console.log("toggleLikeMessage called with messageId:", messageId);
-        console.log("Logged-in user ID:", loggedInUserId);
+        // console.log("toggleLikeMessage called with messageId:", messageId);
+        // console.log("Logged-in user ID:", loggedInUserId);
         try {
             const response = await fetch(`/api/messages/${messageId}/like`, {
                 method: "PATCH",
@@ -132,7 +132,7 @@ const MessagesProvider = ( {children } : ChildProp) => {
                 }
             });
     
-            console.log("Response status:", response.status);
+            // console.log("Response status:", response.status);
 
             if (!response.ok) {
                 throw new Error(`Failed to toggle like with status ${response.status}`);
@@ -140,7 +140,7 @@ const MessagesProvider = ( {children } : ChildProp) => {
     
             // Check if there is a response body before parsing
             const updatedMessage = response.headers.get("Content-Length") === "0" ? {} : await response.json();
-            console.log("Updated message from server:", updatedMessage);
+            // console.log("Updated message from server:", updatedMessage);
     
             dispatch({ type: 'setMessages', data: messages.map(msg =>
                 msg._id === updatedMessage._id ? updatedMessage : msg

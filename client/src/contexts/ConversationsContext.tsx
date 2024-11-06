@@ -29,19 +29,19 @@ type ReducerActionTypeVariations =
 | { type: 'reset'}
 
 const reducer = ( state: ConversationWithUser[], action: ReducerActionTypeVariations): ConversationWithUser[] =>{
-    console.log("Reducer action:", action); // Log each action dispatched
+    // console.log("Reducer action:", action); // Log each action dispatched
     switch(action.type){
         case 'setConversations':
-            console.log("Setting conversations:", action.data); // Log data for setting conversations
+            // console.log("Setting conversations:", action.data); // Log data for setting conversations
             return action.data;
         case 'addConversation':
-            console.log("Adding new conversation:", action.newConversation); // Log new conversation being added
+            // console.log("Adding new conversation:", action.newConversation); // Log new conversation being added
             return [ ...state, action.newConversation]; 
         case 'deleteConversation':
-            console.log("Deleting conversation with ID:", action.id); // Log ID of conversation being deleted
+            // console.log("Deleting conversation with ID:", action.id); // Log ID of conversation being deleted
             return state.filter(conversation => conversation._id !== action.id); 
         case 'reset':
-            console.log("Resetting conversations"); // Log reset action
+            // console.log("Resetting conversations"); // Log reset action
             return [];
         default:
             return state;           
@@ -96,7 +96,9 @@ const ConversationsProvider = ({children}: ChildProp) => {
                 console.error("Error creating conversation:", newConversation.error);
                 return null;
             }
-            dispatch({ type: 'addConversation', newConversation });
+             // Re-fetch conversations to ensure the state is updated with the new conversation
+           await fetchConversations();
+            // dispatch({ type: 'addConversation', newConversation });
             setActiveConversationId(newConversation._id);
             return newConversation._id;
         } catch (error) {
@@ -111,7 +113,7 @@ const ConversationsProvider = ({children}: ChildProp) => {
         const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
         const userId = loggedInUser?._id;
 
-        console.log("Logged-in user ID:", userId);
+        // console.log("Logged-in user ID:", userId);
 
         if (userId) {
             try {
@@ -120,7 +122,7 @@ const ConversationsProvider = ({children}: ChildProp) => {
                 });
                 const data = await response.json();
 
-                console.log("Fetched conversations:", data);
+                // console.log("Fetched conversations:", data);
 
                 dispatch({ type: 'setConversations', data });
             } catch (error) {
@@ -172,7 +174,7 @@ const ConversationsProvider = ({children}: ChildProp) => {
 
     useEffect(() => {
         fetchConversations();
-        console.log("Conversations state:", conversations);
+        // console.log("Conversations state:", conversations);
     }, []);   
 
 
