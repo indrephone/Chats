@@ -41,6 +41,11 @@ export const StyledInput = styled.input`
   font-size: 16px;
   margin-bottom: 10px;
   box-sizing: border-box;
+
+  &:focus {
+    outline: none; /* Ensures no outline appears */
+    border: 2px solid #6a5acd; /* Optionally, add a custom focus border */
+  }
 `;
 
 export const SubmitButton = styled.input`
