@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form } from 'formik';
 import UsersContext, { UserType, UsersContextTypes } from '../../contexts/UsersContext'; 
+import {FormContainer, FormWrapper, StyledInput, SubmitButton, StyledLabel} from '../styles/FormStyles';
 
 
 const EditUser: React.FC = () => {
@@ -42,6 +43,8 @@ const EditUser: React.FC = () => {
 
     return ( 
         user && (
+          <FormContainer>
+             <h2>Edit User</h2>
             <Formik
               initialValues={{
                 username: user?.username || '',
@@ -71,31 +74,31 @@ const EditUser: React.FC = () => {
               }}
             >
               {({ isSubmitting, errors, touched }) => (
-                <Form>
+                 <FormWrapper as={Form}>
                   <div>
-                    <label htmlFor="username">Username:</label>
-                    <Field name="username" id="username" type="text" />
+                    <StyledLabel htmlFor="username">Username:</StyledLabel>
+                    <StyledInput as={Field} name="username" id="username" type="text" />
                     {errors.username && touched.username && <div>{errors.username}</div>}
                   </div>
                   <div>
-                    <label htmlFor="profileImage">Profile Image:</label>
-                    <Field name="profileImage" id="profileImage" type="text" placeholder="Enter profile image URL" />
+                    <StyledLabel htmlFor="profileImage">Profile Image:</StyledLabel>
+                    <StyledInput as={Field} name="profileImage" id="profileImage" type="text" placeholder="Enter profile image URL" />
                   </div>
                   <div>
-                    <label htmlFor="password">New Password:</label>
-                    <Field name="password" id="password" type="password" placeholder="Leave blank to keep current password"  />
+                    <StyledLabel htmlFor="password">New Password:</StyledLabel>
+                    <StyledInput as={Field} name="password" id="password" type="password" placeholder="Leave blank to keep current password"  />
                   </div>
                   <div>
-                    <label htmlFor="passwordRepeat">Password Repeat</label>
-                    <Field name="passwordRepeat" id="passwordRepeat" type="password" />
+                    <StyledLabel htmlFor="passwordRepeat">Password Repeat</StyledLabel>
+                    <StyledInput as={Field} name="passwordRepeat" id="passwordRepeat" type="password" />
                     {errors.passwordRepeat && touched.passwordRepeat && <div>{errors.passwordRepeat}</div>}
                   </div>
-                  <button type="submit" disabled={isSubmitting}>
-                    Update User
-                  </button>
-                </Form>
+
+                  <SubmitButton type="submit" disabled={isSubmitting} value="Update User" /> 
+                </FormWrapper>
               )}
             </Formik>
+          </FormContainer>
           )
  );
 }

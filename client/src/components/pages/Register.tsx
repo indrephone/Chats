@@ -2,81 +2,9 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {Link, useNavigate } from 'react-router-dom';
 import {useContext, useState} from 'react';
-import styled from 'styled-components';
 
 import UsersContext, {UsersContextTypes, UserRegistrationType} from '../../contexts/UsersContext';
-
-const RegisterContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-
-  h2 {
-    margin-bottom: 20px;
-    text-align: center;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 300px;
-    gap: 10px;
-  }
-
-  p {
-    margin-top: 15px;
-    text-align: center;
-  }
-`;
-const FormWrapper = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 300px;
-  gap: 10px; 
-
-  > div{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    margin-bottom: 10px;
-  }
-`;
-const StyledInput = styled.input`
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  margin-bottom: 10px;
-  box-sizing: border-box;
-`;
-const SubmitButton = styled.input`
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #7b68ee;
-  color: white;
-  outline: none;
-  border: none;
-  transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease, font-weight 0.3s ease;
- 
-  &:hover {
-    color: #ff00ea;
-    background-color: #6a5acd;
-    font-size: 17px;
-    font-weight: bold;
-  }
-
-  &:active {
-    background-color: #4c3ccf;
-    font-size: 17px;
-    font-weight: bold; 
-  }
-`;
+import {FormContainer, FormWrapper, StyledInput, SubmitButton} from '../styles/FormStyles';
 
 
 const Register = () => {
@@ -134,7 +62,7 @@ const Register = () => {
   });
 
     return ( 
-        <RegisterContainer>
+        <FormContainer>
             <h2>Register</h2>
             <FormWrapper onSubmit={formik.handleSubmit} >
             <div>
@@ -197,7 +125,7 @@ const Register = () => {
             </FormWrapper>
             {registerMessage && <p>{registerMessage}</p>}
             <p>Allready have an account? Go to: <Link to="/login">Sign In</Link></p>
-        </RegisterContainer>
+        </FormContainer>
      );
 }
  
