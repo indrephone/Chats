@@ -73,7 +73,7 @@ export const SubmitButton = styled.input`
   }
 `;
 
-export const StyledLabel = styled.label`
+export const StyledFormLabel = styled.label`
   color: white;
   font-size: 18px; 
   margin-bottom: 5px; 

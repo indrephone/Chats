@@ -1,9 +1,10 @@
 import { useContext } from 'react';
 
-import styled from 'styled-components';
-
 import UsersContext, { UsersContextTypes} from '../../contexts/UsersContext';
 import AllUsersCard from '../UI/molecules/AllUsersCard';
+
+import { StyledHeader } from '../styles/AllPageStyles';
+import styled from 'styled-components';
 
 const StyledSection = styled.section`
   padding: 10px 30px;
@@ -19,7 +20,7 @@ const { users, loggedInUser } = useContext(UsersContext) as UsersContextTypes;
 
     return ( 
         <StyledSection>
-            <h2>All Users</h2>
+             <StyledHeader>All Users</StyledHeader>
             <div>
                    {filteredUsers.map(user =>
                     <AllUsersCard

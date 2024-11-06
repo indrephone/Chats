@@ -1,6 +1,7 @@
 import { useContext} from 'react';
 import UsersContext,{ UsersContextTypes } from '../../contexts/UsersContext';
 import styled from 'styled-components';
+import { StyledHeader } from '../styles/AllPageStyles';
 
 const ProfileStyle = styled.section`
   display: flex;
@@ -27,7 +28,7 @@ const Profile = () => {
 
     return ( 
         <ProfileStyle>
-            <h1>Profile - Welcome to the Chat Palace!</h1>
+            <StyledHeader>Welcome to the Chat Palace!</StyledHeader>
             <h3>{loggedInUser.username}</h3>
             <YourImage 
                src={loggedInUser.profileImage || "/default_profile_image.svg"} 

@@ -3,7 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik, Field, Form } from 'formik';
 import UsersContext, { UserType, UsersContextTypes } from '../../contexts/UsersContext'; 
-import {FormContainer, FormWrapper, StyledInput, SubmitButton, StyledLabel} from '../styles/FormStyles';
+import {FormContainer, FormWrapper, StyledInput, SubmitButton, StyledFormLabel} from '../styles/FormStyles';
+import { StyledHeader } from '../styles/AllPageStyles';
 
 
 const EditUser: React.FC = () => {
@@ -44,7 +45,7 @@ const EditUser: React.FC = () => {
     return ( 
         user && (
           <FormContainer>
-             <h2>Edit User</h2>
+             <StyledHeader>Edit User</StyledHeader>
             <Formik
               initialValues={{
                 username: user?.username || '',
@@ -76,20 +77,20 @@ const EditUser: React.FC = () => {
               {({ isSubmitting, errors, touched }) => (
                  <FormWrapper as={Form}>
                   <div>
-                    <StyledLabel htmlFor="username">Username:</StyledLabel>
+                    <StyledFormLabel htmlFor="username">Username:</StyledFormLabel>
                     <StyledInput as={Field} name="username" id="username" type="text" />
                     {errors.username && touched.username && <div>{errors.username}</div>}
                   </div>
                   <div>
-                    <StyledLabel htmlFor="profileImage">Profile Image:</StyledLabel>
+                    <StyledFormLabel htmlFor="profileImage">Profile Image:</StyledFormLabel>
                     <StyledInput as={Field} name="profileImage" id="profileImage" type="text" placeholder="Enter profile image URL" />
                   </div>
                   <div>
-                    <StyledLabel htmlFor="password">New Password:</StyledLabel>
+                    <StyledFormLabel htmlFor="password">New Password:</StyledFormLabel>
                     <StyledInput as={Field} name="password" id="password" type="password" placeholder="Leave blank to keep current password"  />
                   </div>
                   <div>
-                    <StyledLabel htmlFor="passwordRepeat">Password Repeat</StyledLabel>
+                    <StyledFormLabel htmlFor="passwordRepeat">Password Repeat</StyledFormLabel>
                     <StyledInput as={Field} name="passwordRepeat" id="passwordRepeat" type="password" />
                     {errors.passwordRepeat && touched.passwordRepeat && <div>{errors.passwordRepeat}</div>}
                   </div>

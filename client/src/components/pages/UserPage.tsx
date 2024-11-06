@@ -3,6 +3,7 @@ import { useState, useEffect, useContext} from 'react';
 import { UserType } from '../../contexts/UsersContext';
 import styled from 'styled-components';
 import ConversationsContext, { ConversationsContextTypes} from '../../contexts/ConversationsContext';
+import { StyledHeader } from '../styles/AllPageStyles';
 
 const OtherUserStyle = styled.section`
   display: flex;
@@ -71,7 +72,7 @@ const UserPage = () => {
 
     return ( 
         <OtherUserStyle>
-            <h1>User Profile</h1>
+            <StyledHeader>User Profile</StyledHeader>
                <p>Username: {user.username}</p>
                <ProfileImage
                   src={user.profileImage || "/default_profile_image.svg"} 

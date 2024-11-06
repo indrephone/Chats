@@ -6,6 +6,7 @@ import ConversationsContext, { ConversationsContextTypes } from '../../contexts/
 import UsersContext, { UsersContextTypes } from '../../contexts/UsersContext';
 import AllConversationsCard from '../UI/molecules/AllConversationsCard';
 import DeleteConversationButton from '../UI/organisms/DeleteConversationsButton';
+import { StyledHeader } from '../styles/AllPageStyles';
 
 const StyledSection = styled.section`
   padding: 10px 30px;
@@ -53,7 +54,7 @@ const Conversations = () => {
 
     return ( 
         <StyledSection>
-            <h2>Conversations</h2>
+            <StyledHeader>Conversations</StyledHeader>
             <div>
                 {filteredConversations.length > 0 ? (
                    filteredConversations.map(conversation => (
