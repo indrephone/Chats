@@ -113,7 +113,7 @@ const Header = () => {
           <li>
             <NavLink to="/conversations">
              <IconContainer>
-                <img src="/chat_white2.svg" alt="chat button" />
+                <img src="/chat_white.svg" alt="chat button" />
                   {conversationCount > 0 && (
                   <Badge>{conversationCount}</Badge>  // Show badge if there are conversations
                 )}
