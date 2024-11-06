@@ -22,6 +22,7 @@ const ChatContainer = styled.section`
     background-size: cover;       
     background-position: center;  
     background-repeat: no-repeat; */
+    padding: 10px 30px;
 `;
 
 const MessageListContainer = styled.div`
