@@ -7,9 +7,7 @@ import ConversationsContext, { ConversationsContextTypes } from '../../contexts/
 import MessageList from '../UI/molecules/MessageList';  // Component for displaying list of messages
 import MessageInput from "../UI/atoms/MessageInput"; // Component for message input
 
-type ChatPageProps = {
-     conversationId: string;
- };
+
 // Define a type for creating a new message without `_id`
 type NewMessageType = Omit<MessageType, '_id'>;
 

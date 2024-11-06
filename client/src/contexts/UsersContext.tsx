@@ -13,10 +13,12 @@ export type UserRegistrationType = {
   password: string;
   passwordRepeat: string; // Only used for validation during registration
 };
+export type UserRegistrationPayload = Omit<UserRegistrationType, 'passwordRepeat'>;
+
 export type ErrorOrSuccessReturn = {error?: string, success?: string};
 export type UsersContextTypes ={
     users: UserType[],
-    addNewUser: (user: UserRegistrationType ) => Promise<ErrorOrSuccessReturn>
+    addNewUser: (user: UserRegistrationPayload) => Promise<ErrorOrSuccessReturn>,
     loggedInUser: UserType | null,
     logUserIn: (userLoginInfo: Pick<UserType, "username" | "password">) => Promise<ErrorOrSuccessReturn>,
     logout: () => void,
