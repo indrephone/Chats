@@ -15,7 +15,7 @@ const UnreadIndicator = styled.span`
   margin-left: 8px;
 `;
 const StyleNewDeletDiv = styled.div`
-  background-color: #f5f5f5;
+  background-color: #492f2f;
   border-bottom: 1px solid #ccc;
   gap: 10px;
 `;

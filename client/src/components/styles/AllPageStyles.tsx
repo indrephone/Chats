@@ -13,10 +13,6 @@ export const StyledHeader = styled.h2`
     0 0 15px #ffd700,   /* Strong glow */
     0 0 20px #ffd700;   /* Extra glow for neon effect */
 `;
-export const StyledSectionForLists = styled.section`
-  padding: 10px 30px;
-  background-color: #6d6565;
-`;
 export const ProfileSection = styled.section`
   display: flex;
   flex-direction:column;
@@ -37,4 +33,8 @@ export const StyledUserNameHeader = styled.p`
   color: white;
   font-size: 18px; 
   margin-bottom: 5px; 
+`;
+export const StyledSectionForLists = styled.section`
+  padding: 10px 30px;
+  background-color: #6d6565;
 `;
