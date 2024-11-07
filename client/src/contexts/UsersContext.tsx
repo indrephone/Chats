@@ -136,7 +136,7 @@ const UsersProvider = ({children}: ChildProp) => {
 
   const logout = () => {
     console.log("Logging out..."); 
-    setLoggedInUser(null);
+    // setLoggedInUser(null);
     localStorage.removeItem('loggedInUser');
     console.log("LocalStorage after logout:", localStorage.getItem('loggedInUser'));
   };

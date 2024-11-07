@@ -114,19 +114,28 @@ const ConversationsProvider = ({ children }: ChildProp ) => {
 // Function to fetch conversations
 const fetchConversations = async () => {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+    // console.log("Logged-in user retrieved from local storage:", loggedInUser);
+
     const userId = loggedInUser?._id;
+    // console.log("User ID:", userId);
 
     if (userId) {
         try {
+            // console.log("Fetching conversations with user ID:", userId);
             const response = await fetch(`/api/conversations`, {
                 headers: { '_id': userId }
             });
+            // console.log("Fetch response:", response);
+
             const data = await response.json();
+            // console.log("Conversations data:", data);
 
             dispatch({ type: 'setConversations', data });
         } catch (error) {
             console.error("Failed to fetch conversations:", error);
         }
+    }else {
+        console.warn("No user ID found; skipping fetch.");
     }
 };
 
@@ -169,12 +178,6 @@ const fetchConversations = async () => {
       };
       
 
-
-    useEffect(() => {
-        fetchConversations();
-    }, []);   
-
-
 // Function to get conversation count for the logged-in user
 const getConversationCount = () => {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
@@ -189,7 +192,9 @@ const getConversationCount = () => {
         ).length;
 };
 
-
+useEffect(() => {
+    fetchConversations();
+}, []);   
 
     return (
         <ConversationsContext.Provider 
