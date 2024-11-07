@@ -59,7 +59,9 @@ const Conversations = () => {
                            data={conversation}
                            onClick={() => chooseConversationIfExists(conversation._id)}
                         />
-                    {conversation.hasUnreadMessages && <UnreadIndicator>New</UnreadIndicator>}
+                    {conversation.hasUnreadMessages && 
+                        <UnreadIndicator>New</UnreadIndicator>}
+
                     <DeleteConversationButton conversationId={conversation._id} />
                    </StyleNewDeletDiv>
                    ))
