@@ -200,13 +200,21 @@ const authMiddleware = (req, res, next) => {
 app.get('/conversations', authMiddleware, async (req, res) => {
   const client = await MongoClient.connect(DB_CONNECTION);
   try {
-    const data = await client.db('chat_palace').collection('conversations').find({
-      $or: [{ user1: req._id }, { user2: req._id }]
-    }).toArray();
+    const db = client.db('chat_palace');
+    
+  // Fetch conversations where logged-in user is either user1 or user2
+  const conversations = await db.collection('conversations').find({
+    $or: [
+      { user1: req._id },
+      { user2: req._id }
+    ]
+  }).toArray();
 
-    res.send(data);
+   // Send the filtered conversations to the client
+   res.status(200).send(conversations); 
   } catch (err) {
-    res.status(500).send({ error: err });
+    console.error("Error fetching conversations:", err);  
+    res.status(500).send({ error: "Failed to fetch conversations due to server error."});
   } finally {
     client?.close();
   }
@@ -240,11 +248,25 @@ app.post('/conversations', authMiddleware, async (req, res) => {
   try {
     // Extract the second user (user2) from the request body
     const { user2 } = req.body;
+    const user1 = req._id; // Get the logged-in user ID from the middleware
 
-    // Create a new chatroom object with the logged-in user as user1
+     // Check if a conversation between user1 and user2 already exists
+    const existingConversation = await client.db('chat_palace').collection('conversations').findOne({
+          $or: [
+            { user1: user1, user2: user2 },
+            { user1: user2, user2: user1 }
+          ]
+        });
+
+     if (existingConversation) {
+     // If the conversation exists, return it without creating a new one
+         return res.status(200).send(existingConversation);
+      }   
+
+    // If no existing conversation, create a new one
     const newConversation = {
       _id: generateID(), // Generate a unique ID for the new chatroom
-      user1: req._id, // Set the logged-in user as user1
+      user1: user1, // Set the logged-in user as user1
       user2: user2, // Set the other user as user2 from the request body
       hasUnreadMessages: false // Initial state of unread messages
     };
@@ -252,7 +274,7 @@ app.post('/conversations', authMiddleware, async (req, res) => {
     // Insert the new chatroom into the database
     await client.db('chat_palace').collection('conversations').insertOne(newConversation);
 
-    // Respond with the created chatroom
+    // Respond with the created conversation
     res.status(201).send(newConversation);
   } catch (err) {
     console.error(err);
@@ -351,7 +373,7 @@ app.post('/conversations/:id/messages', authMiddleware, async (req, res) => {
 
 
 app.delete('/conversations/:id', authMiddleware, async (req, res) => {
-  console.log("DELETE /conversations/:id route hit");
+  // console.log("DELETE /conversations/:id route hit");
 
   const client = new MongoClient(DB_CONNECTION);
   try {
@@ -386,7 +408,7 @@ app.delete('/conversations/:id', authMiddleware, async (req, res) => {
       // console.log("Deleting messages with conversationId:", conversationId);
 
       const deleteMessagesResult = await db.collection('messages').deleteMany({ conversationId: conversationId });
-      console.log("Messages delete result:", deleteMessagesResult);
+      // console.log("Messages delete result:", deleteMessagesResult);
 
       // Step 4: Send success response with counts of deleted items
       res.status(200).json({

@@ -60,6 +60,8 @@ const ConversationsProvider = ({children}: ChildProp) => {
     };
 
 
+
+
     const startOrGetConversation = async (otherUserId: string): Promise<string | null> => {
         const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
         const userId = loggedInUser?._id;
@@ -96,9 +98,9 @@ const ConversationsProvider = ({children}: ChildProp) => {
                 console.error("Error creating conversation:", newConversation.error);
                 return null;
             }
-             // Re-fetch conversations to ensure the state is updated with the new conversation
-           await fetchConversations();
-            // dispatch({ type: 'addConversation', newConversation });
+            
+            // Re-fetch conversations to ensure the state is updated with the new conversation
+            await fetchConversations();
             setActiveConversationId(newConversation._id);
             return newConversation._id;
         } catch (error) {
@@ -106,32 +108,34 @@ const ConversationsProvider = ({children}: ChildProp) => {
             return null;
         }
     };
-    
+       
 
-    // Function to fetch conversations
-    const fetchConversations = async () => {
-        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
-        const userId = loggedInUser?._id;
+// Function to fetch conversations
+const fetchConversations = async () => {
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
+    const userId = loggedInUser?._id;
 
-        // console.log("Logged-in user ID:", userId);
+    // console.log("Logged-in user ID:", userId);
 
-        if (userId) {
-            try {
-                const response = await fetch(`/api/conversations`, {
-                    headers: { '_id': userId }
-                });
-                const data = await response.json();
+    if (userId) {
+        try {
+            const response = await fetch(`/api/conversations`, {
+                headers: { '_id': userId }
+            });
+            const data = await response.json();
 
-                // console.log("Fetched conversations:", data);
+            // Debugging log
+            console.log("Fetched conversations from backend:", data);
 
-                dispatch({ type: 'setConversations', data });
-            } catch (error) {
-                console.error("Failed to fetch conversations:", error);
-            }
+            dispatch({ type: 'setConversations', data });
+            
+            // check if state is updated
+            console.log("Updated conversations state:", conversations);
+        } catch (error) {
+            console.error("Failed to fetch conversations:", error);
         }
-    };
-
-
+    }
+};
 
      // Function to add a message and re-fetch conversations
      const addMessage = async (conversationId: string, messageContent: string) => {
@@ -174,7 +178,7 @@ const ConversationsProvider = ({children}: ChildProp) => {
 
     useEffect(() => {
         fetchConversations();
-        // console.log("Conversations state:", conversations);
+        console.log("Conversations state:", conversations);
     }, []);   
 
 
@@ -183,9 +187,13 @@ const getConversationCount = () => {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
     const userId = loggedInUser?._id;
 
-    return conversations.filter(conversation => 
-        conversation.user1 === userId || conversation.user2 === userId
-    ).length;
+        // Log the retrieved user ID to ensure it is correct
+        console.log("Logged-in user ID:", userId);
+        console.log("Conversations in getConversationCount:", conversations); 
+
+        return conversations.filter(conversation => 
+            conversation.user1 === userId || conversation.user2 === userId
+        ).length;
 };
 
 
