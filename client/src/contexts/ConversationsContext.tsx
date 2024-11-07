@@ -1,7 +1,7 @@
-import { useReducer, useEffect, createContext, ReactElement, useState } from 'react';
+import { useReducer, useEffect, createContext, useState } from 'react';
 import { UserType} from "../contexts/UsersContext";
 
-type ChildProp = { children: ReactElement };
+type ChildProp = { children?: React.ReactNode  };
 export type ConversationType = {
     _id: string,
     user1: string,
@@ -32,7 +32,7 @@ const reducer = ( state: ConversationWithUser[], action: ReducerActionTypeVariat
     // console.log("Reducer action:", action); // Log each action dispatched
     switch(action.type){
         case 'setConversations':
-            // console.log("Setting conversations:", action.data); // Log data for setting conversations
+            console.log("Reducer received data:", action.data); 
             return action.data;
         case 'addConversation':
             // console.log("Adding new conversation:", action.newConversation); // Log new conversation being added
@@ -51,7 +51,8 @@ const reducer = ( state: ConversationWithUser[], action: ReducerActionTypeVariat
 
 const ConversationsContext = createContext<ConversationsContextTypes | undefined>(undefined);
 
-const ConversationsProvider = ({children}: ChildProp) => {
+const ConversationsProvider = ({ children }: ChildProp ) => {
+
     const [ conversations, dispatch ] = useReducer(reducer,  []);
     const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
 
@@ -115,8 +116,6 @@ const fetchConversations = async () => {
     const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser') || '{}');
     const userId = loggedInUser?._id;
 
-    // console.log("Logged-in user ID:", userId);
-
     if (userId) {
         try {
             const response = await fetch(`/api/conversations`, {
@@ -124,18 +123,13 @@ const fetchConversations = async () => {
             });
             const data = await response.json();
 
-            // Debugging log
-            console.log("Fetched conversations from backend:", data);
-
             dispatch({ type: 'setConversations', data });
-            
-            // check if state is updated
-            console.log("Updated conversations state:", conversations);
         } catch (error) {
             console.error("Failed to fetch conversations:", error);
         }
     }
 };
+
 
      // Function to add a message and re-fetch conversations
      const addMessage = async (conversationId: string, messageContent: string) => {
@@ -178,7 +172,6 @@ const fetchConversations = async () => {
 
     useEffect(() => {
         fetchConversations();
-        console.log("Conversations state:", conversations);
     }, []);   
 
 
@@ -188,8 +181,8 @@ const getConversationCount = () => {
     const userId = loggedInUser?._id;
 
         // Log the retrieved user ID to ensure it is correct
-        console.log("Logged-in user ID:", userId);
-        console.log("Conversations in getConversationCount:", conversations); 
+        // console.log("Logged-in user ID:", userId);
+        // console.log("Conversations in getConversationCount:", conversations); 
 
         return conversations.filter(conversation => 
             conversation.user1 === userId || conversation.user2 === userId
@@ -212,7 +205,7 @@ const getConversationCount = () => {
               deleteConversation   
             }}
             >
-            {children}
+            {children }
         </ConversationsContext.Provider>
     )
 }

@@ -135,8 +135,10 @@ const UsersProvider = ({children}: ChildProp) => {
   }  
 
   const logout = () => {
+    console.log("Logging out..."); 
     setLoggedInUser(null);
     localStorage.removeItem('loggedInUser');
+    console.log("LocalStorage after logout:", localStorage.getItem('loggedInUser'));
   };
 
   const editSpecificUser = async (editedUser: Partial<UserType>, userId: string): Promise<ErrorOrSuccessReturn> => {
