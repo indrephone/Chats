@@ -10,7 +10,7 @@ type MessageInputProps = {
 
 const messageSchema = Yup.string()
     .trim()
-    .min(2, 'Message must be at least 2 characters')
+    .min(1, 'Message must be at least 1 character')
     .max(1000, 'Message cannot exceed 1000 characters');
 
 const InputContainer = styled.div`
