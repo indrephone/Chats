@@ -125,7 +125,7 @@ const fetchConversations = async () => {
             const response = await fetch(`/api/conversations`, {
                 headers: { '_id': userId }
             });
-            // console.log("Fetch response:", response);
+            console.log("Fetch response:", response);
 
             const data = await response.json();
             // console.log("Conversations data:", data);
